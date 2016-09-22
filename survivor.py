@@ -10,6 +10,7 @@ class Survivor:
     infectionReports = 0
 
     def __init__(self, _id , name, age, gender, lat, lon, invent, infectRep):
+        # TODO:missing handler
         self._id = _id
         self.name = str(name)
         self.age = int(age)
@@ -25,36 +26,23 @@ class Survivor:
             return True
         return False
 
-    def jsonToSuvivor(self,s):
-        survivorDic = json.loads(s)
-        return Survivor(
-            survivorDic['id'],
-            survivorDic['name'],
-            survivorDic['age'],
-            survivorDic['gender'],
-            survivorDic['lastLocation']['x'],
-            survivorDic['lastLocation']['y'],
-            survivorDic['inventory'],
-            survivorDic['infectionReports']
-        )
-
     def survivorToDic(self):
-        jso = {"id":self._id
-         , "path": '/survivor/' + str(self._id)
-         , "name": self.name
-         , "age": self.age
-         , "gender": self.gender
-         , "infectionReports": self.infectionReports
-         , "lastLocation": {
-             "x": self.lastLocation['x']
-             ,"y": self.lastLocation['y']
-         }
-         , "inventory": {
-             "water": self.inventory['water']
-             ,"food": self.inventory['food']
-             ,"medication":self.inventory['medication']
-             ,"ammunition": self.inventory['ammunition']
-         }
+        dictSurvivor = {"id":self._id
+            , "path": '/survivor/' + str(self._id)
+            , "name": self.name
+            , "age": self.age
+            , "gender": self.gender
+            , "infectionReports": self.infectionReports
+            , "canTrade": self.canTrade()
+            , "lastLocation": {
+                "x": self.lastLocation['x']
+                ,"y": self.lastLocation['y']
+            }
+            , "inventory": {
+                "water": self.inventory['water']
+                ,"food": self.inventory['food']
+                ,"medication":self.inventory['medication']
+                ,"ammunition": self.inventory['ammunition']
+            }
         }
-
-        return jso
+        return dictSurvivor
