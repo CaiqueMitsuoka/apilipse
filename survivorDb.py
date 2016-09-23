@@ -9,7 +9,7 @@ class SurvivorDb:
             db = MongoClient().apilipse[database]
             db.find({})
         except pymongo.errors.ServerSelectionTimeoutError:
-            print "Database is taking too long to responde\n - ServerSelectionTimeoutError"
+            print "Database is taking too long to responde\nIs it running?\n - ServerSelectionTimeoutError"
         except pymongo.errors.ConnectionFailure:
             print "Failed to connect to database"
 
@@ -31,7 +31,7 @@ class SurvivorDb:
     def searchById(self, _id):
         try:
             survivorData = db.find({'_id': int(_id)})[0]
-            # print survivorData
+            print survivorData
         except:
             return None
         return self.dataToSurvivor(survivorData)
@@ -52,11 +52,11 @@ class SurvivorDb:
             'infectionReports': 0
             }
         else:
-            raise ValueError('Incorrect type')
+            raise TypeError('Incorrect type')
         try:
             _id = db.insert_one(survivor).inserted_id
         except ServerSelectionTimeoutError:
-            print 'eh isso ai bobs'
+            return None
         return Survivor(_id, name, age, gender, lastLocation[0],lastLocation[1], inventory, 0)
 
     def updateById(self, _id, field, value):
