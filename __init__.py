@@ -17,23 +17,26 @@ def getAllSurvivors():
         survivorList.append(people.survivorToDic())
     return jsonify({'Suvivors':survivorList}), 201
 
-@app.route('/api/v1/survivors/<int:survivor_id>')
+@app.route('/api/v1/survivors/<int:survivor_id>', methods=['GET'])
 def getSurvivorById(survivor_id):
     survivor = db.searchById(survivor_id)
     if survivor == None:
         abort(404)
-    return jsonify(survivor.survivorToDic())
+    resp = make_response(jsonify(survivor.survivorToDic()),200)
+    resp.headers['Content-Type'] = 'application/json'
+    return resp
 
 @app.route('/api/v1/update/location', methods=['POST'])
 def updateLocation():
     try:
         result = db.updateLocation(request.json['id'], request.json['lastLocation']['x'], request.json['lastLocation']['y'])
+    except TypeError:
+        abort(400)
     except:
-        abort(422)
-    if result > 0:
-        return jsonify({'updatedId':request.json['id']})
-    abort(404)
-
+        abort(408)
+    if result < 1:
+        abort(404)
+    return jsonify({'updatedId':request.json['id']})
 
 @app.route('/api/v1/survivors', methods=['POST'])
 def postNewSurvivor():
@@ -63,16 +66,20 @@ def reportInfected():
     # database error
     abort(404)
 
+@app.route('/api/v1/update/trade', methods=['POST'])
+def postTrade():
+    print request.json
+    print "aqui"
+    return jsonify(request.json)
+
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
 
-@app.errorhandler(422)
+@app.errorhandler(400)
 def coulnt_parse(error):
     return make_response(jsonify({'error': 'Could\'t parse JSON'}), 422)
 
-if __name__ == '__main__':
-    app.run(debug=True)
 
 def jsonToSuvivor(s):
     survivorDic = json.loads(s)
@@ -86,3 +93,8 @@ def jsonToSuvivor(s):
         survivorDic['inventory'],
         survivorDic['infectionReports']
     )
+
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
