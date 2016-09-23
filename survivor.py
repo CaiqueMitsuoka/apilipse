@@ -9,15 +9,15 @@ class Survivor:
     inventory = {}
     infectionReports = 0
 
-    def __init__(self, _id , name, age, gender, lat, lon, invent, infectRep):
+    def __init__(self, _id , name, age, gender, lat, lon, invent, infectRep=0):
         # TODO:missing handler
-        self._id = _id
+        self._id = int(_id)
         self.name = str(name)
         self.age = int(age)
         self.gender = str(gender)
         self.lastLocation['x'] = float(lat)
         self.lastLocation['y'] = float(lon)
-        self.inventory = invent
+        self.inventory = dict(invent)
         self.infectionReports = infectRep
 
 
