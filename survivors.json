@@ -1,0 +1,24 @@
+{"_id": 0, "name":"Caique Hitoshi Mitsuoka", "age": 21, "gender":"M", "lastLocation":{"x":15245.5,"y":84875.9}, "inventory":{"water": 1, "food": 3,"medication": 4,"ammunition": 40}, "infectionReports":1}
+{"_id": 2, "name":"Crono(Chrono Trigger)", "age": 18, "gender":"M", "lastLocation":{"x":84657.5,"y":23542.9}, "inventory":{"water": 3, "food": 2,"medication": 12,"ammunition": 10}, "infectionReports":0}
+{"_id": 1, "name":"Tyrion Lanister", "age":37 , "gender":"M", "lastLocation":{"x":18422.0,"y":1245.3}, "inventory":{"water": 15, "food": 20,"medication": 0,"ammunition": 200}, "infectionReports":3}
+{"_id": 3, "name":"Jon Snow", "age": 20, "gender":"M", "lastLocation":{"x":23546.5,"y":22104.45}, "inventory":{"water": 1, "food": 1,"medication": 0,"ammunition": 0}, "infectionReports":4}
+{"_id": 4, "name":"Cersei Lanister", "age": 42, "gender":"F", "lastLocation":{"x":2168.5,"y":31321.9}, "inventory":{"water": 10, "food": 15,"medication": 5,"ammunition": 0}, "infectionReports":0}
+{"_id": 5, "name":"Eleven", "age": 12, "gender":"F", "lastLocation":{"x":12640.5,"y":21542.9}, "inventory":{"water": 5, "food": 5,"medication": 0,"ammunition": 0}, "infectionReports":2}
+{"_id": 6, "name":"Darwin Silva", "age": 75, "gender":"M", "lastLocation":{"x":2168.6,"y":56465.29}, "inventory":{"water": 10, "food": 20,"medication": 5,"ammunition": 200}, "infectionReports":0}
+{"_id": 7, "name":"Ray", "age": 21, "gender":"F", "lastLocation":{"x":21355.5,"y":11212.9}, "inventory":{"water": 2, "food": 4,"medication": 3,"ammunition": 20}, "infectionReports":1}
+{"_id": 8, "name":"Zumbi dos Palmares", "age": 21, "gender":"M", "lastLocation":{"x":15245.5,"y":84875.9}, "inventory":{"water": 1, "food": 3,"medication": 4,"ammunition": 40}, "infectionReports":0}
+{"_id": 9, "name":"Dimas o primeiro", "age": 38, "gender":"M", "lastLocation":{"x":21655.5,"y":312315}, "inventory":{"water": 4, "food": 1,"medication": 1,"ammunition": 15}, "infectionReports":13}
+{"_id": 10, "name":"Marvin", "age": 5, "gender":"M", "lastLocation":{"x":21311.5,"y":6548.9}, "inventory":{"water": 0, "food": 0,"medication": 0,"ammunition": 0}, "infectionReports":2}
+{"_id": 11, "name":"Trish", "age": 21, "gender":"F", "lastLocation":{"x":42451.5,"y":42156.9}, "inventory":{"water": 5, "food": 2,"medication": 0,"ammunition": 32}, "infectionReports":1}
+{"_id": 12, "name":"Pablito", "age": 38, "gender":"M", "lastLocation":{"x":215485.5,"y":35468.9}, "inventory":{"water": 99, "food": 99,"medication": 50,"ammunition": 999}, "infectionReports":3}
+{"_id": 13, "name":"Segiao", "age": 58, "gender":"M", "lastLocation":{"x":84654.5,"y":65455.9}, "inventory":{"water": 20, "food": 20,"medication": 10,"ammunition": 8}, "infectionReports":10}
+{"_id": 14, "name":"Jairzito", "age": 38, "gender":"M", "lastLocation":{"x":21654.2,"y":32156.21}, "inventory":{"water": 5, "food": 11,"medication": 0,"ammunition": 13}, "infectionReports":3}
+{"_id": 21, "name":"Ruth", "age": 45, "gender":"F", "lastLocation":{"x":46546.6,"y":6548.8}, "inventory":{"water": 2, "food": 3,"medication": 3,"ammunition": 22}, "infectionReports":1}
+{"_id": 15, "name":"Wibble", "age": 25, "gender":"M", "lastLocation":{"x":5432.435,"y":316158.3}, "inventory":{"water": 3, "food": 16,"medication": 1,"ammunition": 48}, "infectionReports":1}
+{"_id": 16, "name":"Agnaldo", "age": 39, "gender":"M", "lastLocation":{"x":131561.3,"y":231564.3}, "inventory":{"water": 2, "food": 8,"medication": 3,"ammunition": 50}, "infectionReports":1}
+{"_id": 22, "name":"Nastacia", "age": 66, "gender":"F", "lastLocation":{"x":64864.5,"y":654684.5}, "inventory":{"water": 8, "food": 1,"medication": 1,"ammunition": 10}, "infectionReports":0}
+{"_id": 17, "name":"Satanel", "age": 66, "gender":"M", "lastLocation":{"x":12345.54,"y":15845.21316}, "inventory":{"water": 1, "food": 6,"medication": 2,"ammunition": 22}, "infectionReports":0}
+{"_id": 18, "name":"Natanel", "age": 48, "gender":"M", "lastLocation":{"x":215654.3,"y":21654.3}, "inventory":{"water": 8, "food": 56,"medication": 1,"ammunition": 25}, "infectionReports":3}
+{"_id": 19, "name":"Caiqueson", "age": 28, "gender":"M", "lastLocation":{"x":31654.3,"y":32164.3}, "inventory":{"water": 7, "food": 2,"medication": 4,"ammunition": 100}, "infectionReports":0}
+{"_id": 23, "name":"Dona Benta", "age": 78, "gender":"F", "lastLocation":{"x":6548.6,"y":654986.6}, "inventory":{"water": 10, "food": 4,"medication": 5,"ammunition": 154}, "infectionReports":1}
+{"_id": 20, "name":"Felipson", "age": 20, "gender":"M", "lastLocation":{"x":15784.545,"y":456464.6}, "inventory":{"water": 3, "food": 13,"medication": 2,"ammunition": 125}, "infectionReports":0}
