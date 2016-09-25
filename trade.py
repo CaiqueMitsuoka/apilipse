@@ -7,9 +7,42 @@ class Trader:
     food = 0
     medication = 0
     ammunition = 0
+    inventory = []
     def __init__(self, data, id):
         self.id = id
         self.water, self.food, self.medication, self.ammunition = data
+
+    def getTotalPoints(self):
+        return self.water * 4 + self.food * 3 + self.medication * 2 + self.ammunition
+
+    def canGiveItens(self,db):
+        survivor = db.searchById(self.id)
+        if not (survivor == None) and survivor.canTrade():
+            inventory = survivor.inventory
+            if inventory['water'] >= self.water and inventory['food'] >= self.food and inventory['medication'] >= self.medication and inventory['ammunition'] >= self.ammunition:
+                return True
+        return False
+
+    def listItens(self):
+        return [self.water,self.food,self.medication,self.ammunition]
+
+    def prepareTrade(self, db, receive):
+        self.inventory = db.searchById(self.id).inventory
+        self.inventory['water'] = (self.inventory['water'] - self.water) + receive[0]
+        self.inventory['food'] = (self.inventory['food'] - self.food) + receive[1]
+        self.inventory['medication'] = (self.inventory['medication'] - self.medication) + receive[2]
+        self.inventory['ammunition'] = (self.inventory['ammunition'] - self.ammunition) + receive[3]
+        qtt = 0
+        for item in self.inventory:
+            if item >= 0:
+                qtt += 1
+        if qtt == len(self.inventory):
+            return True
+        return False
+
+    def commitTrade(self,db):
+        r = db.updateById(self.id,'inventory',self.inventory)
+        return r
 
 def assignContent(itens):
     typeItens = ['water','food','medication','ammunition']
@@ -33,8 +66,26 @@ def getTraders(data):
     except (KeyError, ValueError, IndexError ):
         return []
 
+def verifyIntegrity(data):
+    if ('trade' in data and len(data['trade']) == 2):
+        trade = data['trade']
+        if ('id' in trade[0]) and ('id' in trade[1]):
+            if ('itens' in trade[0]) and ('itens' in trade[1]):
+                return True
+    return False
 
-# def trade(data):
-#     if verifyIntegrity():
-#
-#     else:
+def trade(data):
+    if verifyIntegrity(data):
+        tradeRight, tradeLeft = getTraders(data)
+        db = SurvivorDb('survivors')
+        if tradeLeft.canGiveItens(db) and tradeRight.canGiveItens(db):
+            if tradeRight.prepareTrade(db,tradeLeft.listItens()) and tradeLeft.prepareTrade(db,tradeRight.listItens()):
+                tradeLeft.commitTrade(db)
+                tradeRight.commitTrade(db)
+                return True
+            else:
+                raise ValueError('Give more itens than have')
+        else:
+            raise ValueError('Give more itens than have')
+    else:
+        raise KeyError('Missing key in JSON request')

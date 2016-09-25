@@ -31,7 +31,6 @@ class SurvivorDb:
     def searchById(self, _id):
         try:
             survivorData = db.find({'_id': int(_id)})[0]
-            print survivorData
         except:
             return None
         return self.dataToSurvivor(survivorData)

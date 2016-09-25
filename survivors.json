@@ -10,7 +10,7 @@
 {"_id": 9, "name":"Dimas o primeiro", "age": 38, "gender":"M", "lastLocation":{"x":21655.5,"y":312315}, "inventory":{"water": 4, "food": 1,"medication": 1,"ammunition": 15}, "infectionReports":13}
 {"_id": 10, "name":"Marvin", "age": 5, "gender":"M", "lastLocation":{"x":21311.5,"y":6548.9}, "inventory":{"water": 0, "food": 0,"medication": 0,"ammunition": 0}, "infectionReports":2}
 {"_id": 11, "name":"Trish", "age": 21, "gender":"F", "lastLocation":{"x":42451.5,"y":42156.9}, "inventory":{"water": 5, "food": 2,"medication": 0,"ammunition": 32}, "infectionReports":1}
-{"_id": 12, "name":"Pablito", "age": 38, "gender":"M", "lastLocation":{"x":215485.5,"y":35468.9}, "inventory":{"water": 99, "food": 99,"medication": 50,"ammunition": 999}, "infectionReports":3}
+{"_id": 12, "name":"Pablito", "age": 38, "gender":"M", "lastLocation":{"x":215485.5,"y":35468.9}, "inventory":{"water": 99, "food": 99,"medication": 50,"ammunition": 999}, "infectionReports":2}
 {"_id": 13, "name":"Segiao", "age": 58, "gender":"M", "lastLocation":{"x":84654.5,"y":65455.9}, "inventory":{"water": 20, "food": 20,"medication": 10,"ammunition": 8}, "infectionReports":10}
 {"_id": 14, "name":"Jairzito", "age": 38, "gender":"M", "lastLocation":{"x":21654.2,"y":32156.21}, "inventory":{"water": 5, "food": 11,"medication": 0,"ammunition": 13}, "infectionReports":3}
 {"_id": 21, "name":"Ruth", "age": 45, "gender":"F", "lastLocation":{"x":46546.6,"y":6548.8}, "inventory":{"water": 2, "food": 3,"medication": 3,"ammunition": 22}, "infectionReports":1}
@@ -22,3 +22,4 @@
 {"_id": 19, "name":"Caiqueson", "age": 28, "gender":"M", "lastLocation":{"x":31654.3,"y":32164.3}, "inventory":{"water": 7, "food": 2,"medication": 4,"ammunition": 100}, "infectionReports":0}
 {"_id": 23, "name":"Dona Benta", "age": 78, "gender":"F", "lastLocation":{"x":6548.6,"y":654986.6}, "inventory":{"water": 10, "food": 4,"medication": 5,"ammunition": 154}, "infectionReports":1}
 {"_id": 20, "name":"Felipson", "age": 20, "gender":"M", "lastLocation":{"x":15784.545,"y":456464.6}, "inventory":{"water": 3, "food": 13,"medication": 2,"ammunition": 125}, "infectionReports":0}
+{"_id": 24, "name":"Trump", "age": 70, "gender":"M", "lastLocation":{"x":65275.55,"y":4654.4}, "inventory":{"water": 999, "food": 999,"medication": 999,"ammunition": 999}, "infectionReports":0}

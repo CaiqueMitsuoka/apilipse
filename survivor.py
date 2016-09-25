@@ -28,7 +28,7 @@ class Survivor:
 
     def survivorToDic(self):
         dictSurvivor = {"id":self._id
-            , "path": '/survivor/' + str(self._id)
+            , "path": '/survivors/' + str(self._id)
             , "name": self.name
             , "age": self.age
             , "gender": self.gender
