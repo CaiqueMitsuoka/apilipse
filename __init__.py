@@ -15,7 +15,7 @@ def getAllSurvivors():
         abort(404)
     for people in listSurv:
         survivorList.append(people.survivorToDic())
-    return jsonify({'Suvivors':survivorList}), 201
+    return jsonify({'Suvivors':survivorList}), 200
 
 @app.route('/api/v1/survivors/<int:survivor_id>', methods=['GET'])
 def getSurvivorById(survivor_id):
@@ -47,7 +47,7 @@ def postNewSurvivor():
     if newSurvivor == None:
         # database error
         abort(422)
-    return jsonify({'insertedCount': 1, 'insertedId': newSurvivor._id})
+    return jsonify({'insertedCount': 1, 'insertedId': newSurvivor._id, 'path':'/survivors/' + str(newSurvivor._id)}), 201
 
 @app.route('/api/v1/update/infected', methods=['POST'])
 def reportInfected():
@@ -68,8 +68,7 @@ def reportInfected():
 
 @app.route('/api/v1/update/trade', methods=['POST'])
 def postTrade():
-    print request.json
-    print "aqui"
+
     return jsonify(request.json)
 
 @app.errorhandler(404)
