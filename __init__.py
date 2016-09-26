@@ -11,9 +11,9 @@ db = SurvivorDb('survivors')
 @app.route('/api/v1/survivors', methods=['GET'])
 def getAllSurvivors():
     listSurv = db.getAllSurvivors()
-    survivorList = []
     if len(listSurv) == 0:
         abort(404)
+    survivorList = []
     for people in listSurv:
         survivorList.append(people.survivorToDic())
     return jsonify({'Suvivors':survivorList}), 200
@@ -23,21 +23,19 @@ def getSurvivorById(survivor_id):
     survivor = db.searchById(survivor_id)
     if survivor == None:
         abort(404)
-    resp = make_response(jsonify(survivor.survivorToDic()),200)
-    resp.headers['Content-Type'] = 'application/json'
-    return resp
+    return make_response(jsonify(survivor.survivorToDic()),200)
 
 @app.route('/api/v1/update/location', methods=['POST'])
 def updateLocation():
     try:
         result = db.updateLocation(request.json['id'], request.json['lastLocation']['x'], request.json['lastLocation']['y'])
-    except TypeError:
-        abort(400)
+    except KeyError:
+        abort(422)
     except:
-        abort(408)
+        abort(400)
     if result < 1:
         abort(404)
-    return jsonify({'updatedId':request.json['id']})
+    return jsonify({'updatedId':request.json['id']}), 200
 
 @app.route('/api/v1/survivors', methods=['POST'])
 def postNewSurvivor():
@@ -47,7 +45,7 @@ def postNewSurvivor():
         abort(400)
     if newSurvivor == None:
         # database error
-        abort(400)
+        abort(500)
     return jsonify({'insertedCount': 1, 'insertedId': newSurvivor._id, 'path':'/survivors/' + str(newSurvivor._id)}), 201
 
 @app.route('/api/v1/update/infected', methods=['POST'])
@@ -57,15 +55,11 @@ def reportInfected():
     except:
         # vamo ve
         abort(400)
-    try:
-        result = db.reportInfection(_id)
-    except:
-        abort(404)
-
+    result = db.reportInfection(_id)
     if result > 0:
         return jsonify({'reported':result})
     # database error
-    abort(404)
+    abort(500)
 
 @app.route('/api/v1/update/trade', methods=['POST'])
 def postTrade():
@@ -94,6 +88,10 @@ def coulnt_parse(error):
 @app.errorhandler(422)
 def coulnt_parse(error):
     return make_response(jsonify({'error': 'Missing key or in correct value'}), 422)
+
+@app.errorhandler(500)
+def coulnt_parse(error):
+    return make_response(jsonify({'error': 'Internal error'}), 500)
 
 def jsonToSuvivor(s):
     survivorDic = json.loads(s)
