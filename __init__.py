@@ -2,6 +2,7 @@
 from flask import Flask,jsonify,abort,make_response,request
 from survivor import Survivor
 from suvivorDb import SurvivorDb
+from trade import trade
 import json
 
 app = Flask(__name__)
@@ -43,10 +44,10 @@ def postNewSurvivor():
     try:
         newSurvivor = db.insert(str(request.json['name']),int(request.json['age']),str(request.json['gender']),(float(request.json['lastLocation']['x']),float(request.json['lastLocation']['y'])),dict(request.json['inventory']))
     except:
-        abort(422)
+        abort(400)
     if newSurvivor == None:
         # database error
-        abort(422)
+        abort(400)
     return jsonify({'insertedCount': 1, 'insertedId': newSurvivor._id, 'path':'/survivors/' + str(newSurvivor._id)}), 201
 
 @app.route('/api/v1/update/infected', methods=['POST'])
@@ -55,7 +56,7 @@ def reportInfected():
         _id = request.json['id']
     except:
         # vamo ve
-        abort(422)
+        abort(400)
     try:
         result = db.reportInfection(_id)
     except:
@@ -68,8 +69,19 @@ def reportInfected():
 
 @app.route('/api/v1/update/trade', methods=['POST'])
 def postTrade():
-
-    return jsonify(request.json)
+    try:
+        reqData = request.json
+    except:
+        abort(400)
+    try:
+        if trade(reqData):
+            return jsonify({'code':0, 'message':'Sucess!', 'tradeRight':reqData['trade'][0]['id'], 'tradeLeft':reqData['trade'][1]['id']}), 200
+        else:
+            return jsonify({'code':1,'message':'Survivor can\'trade', 'tradeRight':reqData['trade'][0]['id'], 'tradeLeft':reqData['trade'][1]['id']}), 400
+    except (KeyError, ValueError):
+        abort(422)
+    except:
+        abort(404)
 
 @app.errorhandler(404)
 def not_found(error):
@@ -77,8 +89,11 @@ def not_found(error):
 
 @app.errorhandler(400)
 def coulnt_parse(error):
-    return make_response(jsonify({'error': 'Could\'t parse JSON'}), 422)
+    return make_response(jsonify({'error': 'Could\'t parse JSON'}), 400)
 
+@app.errorhandler(422)
+def coulnt_parse(error):
+    return make_response(jsonify({'error': 'Missing key or in correct value'}), 422)
 
 def jsonToSuvivor(s):
     survivorDic = json.loads(s)
