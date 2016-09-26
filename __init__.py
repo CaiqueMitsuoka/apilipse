@@ -3,6 +3,7 @@ from flask import Flask,jsonify,abort,make_response,request
 from survivor import Survivor
 from suvivorDb import SurvivorDb
 from trade import trade
+from report import reports
 import json
 
 app = Flask(__name__)
@@ -24,6 +25,10 @@ def getSurvivorById(survivor_id):
     if survivor == None:
         abort(404)
     return make_response(jsonify(survivor.survivorToDic()),200)
+
+@app.route('/api/v1/reports', methods=['GET'])
+def getReports():
+    return jsonify(reports()), 200
 
 @app.route('/api/v1/update/location', methods=['POST'])
 def updateLocation():

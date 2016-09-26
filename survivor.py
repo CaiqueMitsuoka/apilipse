@@ -46,3 +46,14 @@ class Survivor:
             }
         }
         return dictSurvivor
+    def getWater(self):
+        return self.inventory['water']
+    def getFood(self):
+        return self.inventory['food']
+    def getMedication(self):
+        return self.inventory['medication']
+    def getAmmunition(self):
+        return self.inventory['ammunition']
+
+    def getListInventory(self):
+        return [self.getWater(),self.getFood(),self.getMedication(),self.getAmmunition()]
