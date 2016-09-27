@@ -8,322 +8,473 @@
 	},
 	"item": [
 		{
-			"name": "[GET]] All Survivors",
-			"event": [
+			"name": "Fail",
+			"description": "",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": "tests[\"Status code is 200\"] = responseCode.code === 200;\n"
-					}
-				}
-			],
-			"request": {
-				"url": "http://localhost:5000/api/v1/survivors",
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": []
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "[GET] Survivor 1",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": "tests[\"Status code is 200\"] = responseCode.code === 200;"
-					}
-				}
-			],
-			"request": {
-				"url": "http://localhost:5000/api/v1/survivors/1",
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": []
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "[GET] Reports",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": "tests[\"Status code is 200\"] = responseCode.code === 200;"
-					}
-				}
-			],
-			"request": {
-				"url": "http://localhost:5000/api/v1/reports",
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": []
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "[POST] Trade 1",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": "var jsonData = JSON.parse(responseBody);\ntests[\"Code 0\"] = jsonData.code === 0;\ntests[\"Sucess!\"] = jsonData.message === \"Sucess!\";"
-					}
-				}
-			],
-			"request": {
-				"url": "http://localhost:5000/api/v1/update/trade",
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
+					"name": "[GET] Survivor invalid id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "tests[\"Status code is 404\"] = responseCode.code === 404;"
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:5000/api/v1/survivors/99asd",
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
 						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\"trade\":\n    [\n        {\n            \"id\":4,\n            \"itens\":\n            {\n                \"water\":1,\n                \"food\":2\n            }\n        },\n        {\n            \"id\":2,\n            \"itens\":{\n                \"medication\":2,\n                \"ammunition\":6\n            }\n        }\n    ]\n\t\n}"
+					},
+					"response": []
 				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "[POST] Trade 2",
-			"event": [
 				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": "var jsonData = JSON.parse(responseBody);\ntests[\"Code 0\"] = jsonData.code === 0;\ntests[\"Sucess!\"] = jsonData.message === \"Sucess!\";"
-					}
-				}
-			],
-			"request": {
-				"url": "http://localhost:5000/api/v1/update/trade",
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
+					"name": "[POST] Trader infected",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "var jsonData = JSON.parse(responseBody);\ntests[\"Code 0\"] = jsonData.code === 1;\ntests[\"Sucess!\"] = jsonData.message === \"Survivor can't trade\";"
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:5000/api/v1/update/trade",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"trade\":\n    [\n        {\n            \"id\":3,\n            \"itens\":\n            {\n                \"water\":1,\n                \"food\":2\n            }\n        },\n        {\n            \"id\":2,\n            \"itens\":{\n                \"medication\":2,\n                \"ammunition\":6\n            }\n        }\n    ]\n\t\n}"
+						},
 						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\"trade\":\n    [\n        {\n            \"id\":2,\n            \"itens\":\n            {\n                \"water\":1,\n                \"food\":2\n            }\n        },\n        {\n            \"id\":4,\n            \"itens\":{\n                \"medication\":2,\n                \"ammunition\":6\n            }\n        }\n    ]\n\t\n}"
+					},
+					"response": []
 				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "[POST] Insert new Survivor / save id",
-			"event": [
 				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": "tests[\"Status code is 201\"] = responseCode.code === 201;\n\nvar jsonData = JSON.parse(responseBody);\npostman.setGlobalVariable(\"id\", jsonData['insertedId']);\n"
-					}
-				}
-			],
-			"request": {
-				"url": "http://localhost:5000/api/v1/survivors",
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
+					"name": "[POST] Trade key error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "tests[\"Status code is 422\"] = responseCode.code === 422;"
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:5000/api/v1/update/trade",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"trade\":\n    [\n        {\n            \"hdhidaushuida\":2,\n            \"itens\":\n            {\n                \"water\":1,\n                \"food\":2\n            }\n        },\n        {\n            \"id\":4,\n            \"itens\":{\n                \"medication\":2,\n                \"ammunition\":6\n            }\n        }\n    ]\n\t\n}"
+						},
 						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"name\":\"Douglas Adams\",\n\t\"age\":42,\"gender\":\"M\",\n\t\"lastLocation\":{\n\t\t\"x\":21545.2,\n\t\t\"y\":12654.1\n\t\t\n\t},\n\t\"inventory\":{\n\t\t\"water\":1,\n\t\t\"food\":2,\n\t\t\"medication\":4,\n\t\t\"ammunition\":10\n\t}\n}"
+					},
+					"response": []
 				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "[POST] Update location id",
-			"event": [
 				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": "var jsonData = JSON.parse(responseBody);\ntests[\"Updated\"] = jsonData.updatedId == globals[\"id\"];\n"
-					}
-				}
-			],
-			"request": {
-				"url": "http://localhost:5000/api/v1/update/location",
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
+					"name": "[POST] Insert key error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "tests[\"Status code is 422\"] = responseCode.code === 422;"
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:5000/api/v1/survivors",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"aehguiaeo\":\"Douglas Adams\",\n\t\"age\":42,\n\t\"gender\":\"M\",\n\t\"lastLocation\":{\n\t\t\"x\":21545.2,\n\t\t\"y\":12654.1\n\t\t\n\t},\n\t\"inventory\":{\n\t\t\"water\":1,\n\t\t\"food\":2,\n\t\t\"medication\":4,\n\t\t\"ammunition\":10\n\t}\n}"
+						},
 						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"id\":{{id}},\n\t\"lastLocation\":{\n\t\t\"x\":12345.1,\n\t\t\"y\":64521.1\n\t}\n}"
+					},
+					"response": []
 				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "[GET] Survivor 6 InfectionReports should be 0",
-			"event": [
 				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": "var jsonData = JSON.parse(responseBody);\ntests[\"Can trade?\"] = jsonData.canTrade === true;"
-					}
-				}
-			],
-			"request": {
-				"url": "http://localhost:5000/api/v1/survivors/{{id}}",
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": []
-				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "[POST] Reporst infected 1",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": "var jsonData = JSON.parse(responseBody);\ntests[\"Infection1\"] = jsonData.reported === 1;"
-					}
-				}
-			],
-			"request": {
-				"url": "http://localhost:5000/api/v1/update/infected",
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
+					"name": "[POST] Update bad request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "tests[\"Status code is 400\"] = responseCode.code === 400;"
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:5000/api/v1/update/location",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\":5975as,\n\t\"lastLocation\":{\n\t\t\"x\":12345.1,\n\t\t\"y\":64521.1\n\t}\n}"
+						},
 						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"id\":{{id}}\n}"
-				},
-				"description": ""
-			},
-			"response": []
+					},
+					"response": []
+				}
+			]
 		},
 		{
-			"name": "[POST] Reporst infected 2",
-			"event": [
+			"name": "Sucess",
+			"description": "",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": "var jsonData = JSON.parse(responseBody);\ntests[\"Infection2\"] = jsonData.reported === 1;"
-					}
-				}
-			],
-			"request": {
-				"url": "http://localhost:5000/api/v1/update/infected",
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
+					"name": "[GET]] All Survivors",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "tests[\"Status code is 200\"] = responseCode.code === 200;\n"
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:5000/api/v1/survivors",
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
 						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"id\":{{id}}\n}"
+					},
+					"response": []
 				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "[POST] Reporst infected 3",
-			"event": [
 				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": "var jsonData = JSON.parse(responseBody);\ntests[\"Infection3\"] = jsonData.reported === 1;"
-					}
-				}
-			],
-			"request": {
-				"url": "http://localhost:5000/api/v1/update/infected",
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
+					"name": "[GET] Survivor 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "tests[\"Status code is 200\"] = responseCode.code === 200;"
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:5000/api/v1/survivors/1",
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
 						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"id\":{{id}}\n}"
+					},
+					"response": []
 				},
-				"description": ""
-			},
-			"response": []
-		},
-		{
-			"name": "[GET] Survivor 6 InfectionReports should be 3",
-			"event": [
 				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": "var jsonData = JSON.parse(responseBody);\ntests[\"Can trade?\"] = jsonData.canTrade === false;"
-					}
-				}
-			],
-			"request": {
-				"url": "http://localhost:5000/api/v1/survivors/{{id}}",
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": []
+					"name": "[GET] Reports",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "tests[\"Status code is 200\"] = responseCode.code === 200;"
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:5000/api/v1/reports",
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": ""
+					},
+					"response": []
 				},
-				"description": ""
-			},
-			"response": []
+				{
+					"name": "[POST] Trade 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "var jsonData = JSON.parse(responseBody);\ntests[\"Code 0\"] = jsonData.code === 0;\ntests[\"Sucess!\"] = jsonData.message === \"Sucess!\";"
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:5000/api/v1/update/trade",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"trade\":\n    [\n        {\n            \"id\":4,\n            \"itens\":\n            {\n                \"water\":1,\n                \"food\":2\n            }\n        },\n        {\n            \"id\":2,\n            \"itens\":{\n                \"medication\":2,\n                \"ammunition\":6\n            }\n        }\n    ]\n\t\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "[POST] Trade 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "var jsonData = JSON.parse(responseBody);\ntests[\"Code 0\"] = jsonData.code === 0;\ntests[\"Sucess!\"] = jsonData.message === \"Sucess!\";"
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:5000/api/v1/update/trade",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"trade\":\n    [\n        {\n            \"id\":2,\n            \"itens\":\n            {\n                \"water\":1,\n                \"food\":2\n            }\n        },\n        {\n            \"id\":4,\n            \"itens\":{\n                \"medication\":2,\n                \"ammunition\":6\n            }\n        }\n    ]\n\t\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "[POST] Insert new Survivor / save id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "tests[\"Status code is 201\"] = responseCode.code === 201;\n\nvar jsonData = JSON.parse(responseBody);\npostman.setGlobalVariable(\"id\", jsonData['insertedId']);\n"
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:5000/api/v1/survivors",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"Douglas Adams\",\n\t\"age\":42,\"gender\":\"M\",\n\t\"lastLocation\":{\n\t\t\"x\":21545.2,\n\t\t\"y\":12654.1\n\t\t\n\t},\n\t\"inventory\":{\n\t\t\"water\":1,\n\t\t\"food\":2,\n\t\t\"medication\":4,\n\t\t\"ammunition\":10\n\t}\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "[POST] Update location id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "var jsonData = JSON.parse(responseBody);\ntests[\"Updated\"] = jsonData.updatedId == globals[\"id\"];\n"
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:5000/api/v1/update/location",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\":{{id}},\n\t\"lastLocation\":{\n\t\t\"x\":12345.1,\n\t\t\"y\":64521.1\n\t}\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "[GET] Survivor 6 InfectionReports should be 0",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "var jsonData = JSON.parse(responseBody);\ntests[\"Can trade?\"] = jsonData.canTrade === true;"
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:5000/api/v1/survivors/{{id}}",
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "[POST] Reporst infected 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "var jsonData = JSON.parse(responseBody);\ntests[\"Infection1\"] = jsonData.reported === 1;"
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:5000/api/v1/update/infected",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\":{{id}}\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "[POST] Reporst infected 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "var jsonData = JSON.parse(responseBody);\ntests[\"Infection2\"] = jsonData.reported === 1;"
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:5000/api/v1/update/infected",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\":{{id}}\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "[POST] Reporst infected 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "var jsonData = JSON.parse(responseBody);\ntests[\"Infection3\"] = jsonData.reported === 1;"
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:5000/api/v1/update/infected",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\":{{id}}\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "[GET] Survivor 6 InfectionReports should be 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": "var jsonData = JSON.parse(responseBody);\ntests[\"Can trade?\"] = jsonData.canTrade === false;"
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:5000/api/v1/survivors/{{id}}",
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

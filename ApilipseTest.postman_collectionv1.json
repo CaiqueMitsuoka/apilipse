@@ -2,21 +2,43 @@
 	"id": "43914fa3-b74e-ea50-7672-25001cb01b63",
 	"name": "ApilipseTest",
 	"description": "",
-	"order": [
-		"cd778be9-a032-f551-bebf-a264fcf26d53",
-		"ab38bc53-bba1-670c-087b-310695a43e93",
-		"e036370b-1920-90d7-5067-0eefe4059b3e",
-		"1b12f299-8700-2d08-d953-5a53e3cf0ff5",
-		"0a3c4edb-df34-971e-5491-ddda44c6b727",
-		"73df71e1-8c0f-f63d-9ebf-c5ccf3c79d6f",
-		"e01d78a9-42c6-137b-c478-24933ca832e2",
-		"881a9ae0-3429-cbbf-12cf-7e56ce8de8fd",
-		"25e83e9e-a8a6-dabe-94e3-7b72f4995625",
-		"0b7e5044-e431-e843-852b-f8108f221ee3",
-		"97f29935-b6e0-af44-8683-212f96985b35",
-		"bd6113e2-ed4a-7428-bd6a-8df8f7db04d7"
+	"order": [],
+	"folders": [
+		{
+			"id": "2a9ac5c1-6a3e-6400-1743-bd1708a17159",
+			"name": "Fail",
+			"description": "",
+			"order": [
+				"e6e90b9b-06df-7f89-ee62-6666297a9cfa",
+				"d449278a-0901-816c-22ae-d0021504430f",
+				"72fdc0c5-ada0-e97b-253f-49962e9b40fc",
+				"9d448c81-28e1-cfaf-5608-4a2afde27adf",
+				"724e6f72-6d2b-8f94-8f68-a3f07a8cf4d1"
+			],
+			"owner": "1066448",
+			"collectionId": "43914fa3-b74e-ea50-7672-25001cb01b63"
+		},
+		{
+			"id": "45ea0693-cacd-f522-6395-1542b2c63287",
+			"name": "Sucess",
+			"description": "",
+			"order": [
+				"cd778be9-a032-f551-bebf-a264fcf26d53",
+				"ab38bc53-bba1-670c-087b-310695a43e93",
+				"e036370b-1920-90d7-5067-0eefe4059b3e",
+				"1b12f299-8700-2d08-d953-5a53e3cf0ff5",
+				"0a3c4edb-df34-971e-5491-ddda44c6b727",
+				"73df71e1-8c0f-f63d-9ebf-c5ccf3c79d6f",
+				"e01d78a9-42c6-137b-c478-24933ca832e2",
+				"881a9ae0-3429-cbbf-12cf-7e56ce8de8fd",
+				"25e83e9e-a8a6-dabe-94e3-7b72f4995625",
+				"0b7e5044-e431-e843-852b-f8108f221ee3",
+				"97f29935-b6e0-af44-8683-212f96985b35",
+				"bd6113e2-ed4a-7428-bd6a-8df8f7db04d7"
+			],
+			"owner": "1066448"
+		}
 	],
-	"folders": [],
 	"timestamp": 1474931149885,
 	"owner": "1066448",
 	"public": false,
@@ -39,6 +61,7 @@
 			"description": "",
 			"collectionId": "43914fa3-b74e-ea50-7672-25001cb01b63",
 			"responses": [],
+			"folder": "45ea0693-cacd-f522-6395-1542b2c63287",
 			"rawModeData": "{\"trade\":\n    [\n        {\n            \"id\":2,\n            \"itens\":\n            {\n                \"water\":1,\n                \"food\":2\n            }\n        },\n        {\n            \"id\":4,\n            \"itens\":{\n                \"medication\":2,\n                \"ammunition\":6\n            }\n        }\n    ]\n\t\n}"
 		},
 		{
@@ -59,6 +82,7 @@
 			"description": "",
 			"collectionId": "43914fa3-b74e-ea50-7672-25001cb01b63",
 			"responses": [],
+			"folder": "45ea0693-cacd-f522-6395-1542b2c63287",
 			"rawModeData": "{\n\t\"id\":{{id}}\n}"
 		},
 		{
@@ -78,6 +102,7 @@
 			"description": "",
 			"collectionId": "43914fa3-b74e-ea50-7672-25001cb01b63",
 			"responses": [],
+			"folder": "45ea0693-cacd-f522-6395-1542b2c63287",
 			"rawModeData": "{\"trade\":\n    [\n        {\n            \"id\":4,\n            \"itens\":\n            {\n                \"water\":1,\n                \"food\":2\n            }\n        },\n        {\n            \"id\":2,\n            \"itens\":{\n                \"medication\":2,\n                \"ammunition\":6\n            }\n        }\n    ]\n\t\n}"
 		},
 		{
@@ -98,7 +123,46 @@
 			"description": "",
 			"collectionId": "43914fa3-b74e-ea50-7672-25001cb01b63",
 			"responses": [],
+			"folder": "45ea0693-cacd-f522-6395-1542b2c63287",
 			"rawModeData": "{\n\t\"id\":{{id}}\n}"
+		},
+		{
+			"id": "724e6f72-6d2b-8f94-8f68-a3f07a8cf4d1",
+			"headers": "Content-Type: application/json\n",
+			"url": "http://localhost:5000/api/v1/update/location",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": "tests[\"Status code is 400\"] = responseCode.code === 400;",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1474974589061,
+			"name": "[POST] Update bad request",
+			"description": "",
+			"collectionId": "43914fa3-b74e-ea50-7672-25001cb01b63",
+			"responses": [],
+			"rawModeData": "{\n\t\"id\":5975as,\n\t\"lastLocation\":{\n\t\t\"x\":12345.1,\n\t\t\"y\":64521.1\n\t}\n}"
+		},
+		{
+			"id": "72fdc0c5-ada0-e97b-253f-49962e9b40fc",
+			"headers": "Content-Type: application/json\n",
+			"url": "http://localhost:5000/api/v1/update/trade",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": "tests[\"Status code is 422\"] = responseCode.code === 422;",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1474974050080,
+			"name": "[POST] Trade key error",
+			"description": "",
+			"collectionId": "43914fa3-b74e-ea50-7672-25001cb01b63",
+			"responses": [],
+			"rawModeData": "{\"trade\":\n    [\n        {\n            \"hdhidaushuida\":2,\n            \"itens\":\n            {\n                \"water\":1,\n                \"food\":2\n            }\n        },\n        {\n            \"id\":4,\n            \"itens\":{\n                \"medication\":2,\n                \"ammunition\":6\n            }\n        }\n    ]\n\t\n}"
 		},
 		{
 			"id": "73df71e1-8c0f-f63d-9ebf-c5ccf3c79d6f",
@@ -118,6 +182,7 @@
 			"description": "",
 			"collectionId": "43914fa3-b74e-ea50-7672-25001cb01b63",
 			"responses": [],
+			"folder": "45ea0693-cacd-f522-6395-1542b2c63287",
 			"rawModeData": "{\n\t\"name\":\"Douglas Adams\",\n\t\"age\":42,\"gender\":\"M\",\n\t\"lastLocation\":{\n\t\t\"x\":21545.2,\n\t\t\"y\":12654.1\n\t\t\n\t},\n\t\"inventory\":{\n\t\t\"water\":1,\n\t\t\"food\":2,\n\t\t\"medication\":4,\n\t\t\"ammunition\":10\n\t}\n}"
 		},
 		{
@@ -137,7 +202,8 @@
 			"name": "[GET] Survivor 6 InfectionReports should be 0",
 			"description": "",
 			"collectionId": "43914fa3-b74e-ea50-7672-25001cb01b63",
-			"responses": []
+			"responses": [],
+			"folder": "45ea0693-cacd-f522-6395-1542b2c63287"
 		},
 		{
 			"id": "97f29935-b6e0-af44-8683-212f96985b35",
@@ -157,7 +223,28 @@
 			"description": "",
 			"collectionId": "43914fa3-b74e-ea50-7672-25001cb01b63",
 			"responses": [],
+			"folder": "45ea0693-cacd-f522-6395-1542b2c63287",
 			"rawModeData": "{\n\t\"id\":{{id}}\n}"
+		},
+		{
+			"id": "9d448c81-28e1-cfaf-5608-4a2afde27adf",
+			"headers": "Content-Type: application/json\n",
+			"url": "http://localhost:5000/api/v1/survivors",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": "tests[\"Status code is 422\"] = responseCode.code === 422;",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1474974497395,
+			"name": "[POST] Insert key error",
+			"description": "",
+			"collectionId": "43914fa3-b74e-ea50-7672-25001cb01b63",
+			"responses": [],
+			"rawModeData": "{\n\t\"aehguiaeo\":\"Douglas Adams\",\n\t\"age\":42,\n\t\"gender\":\"M\",\n\t\"lastLocation\":{\n\t\t\"x\":21545.2,\n\t\t\"y\":12654.1\n\t\t\n\t},\n\t\"inventory\":{\n\t\t\"water\":1,\n\t\t\"food\":2,\n\t\t\"medication\":4,\n\t\t\"ammunition\":10\n\t}\n}"
 		},
 		{
 			"id": "ab38bc53-bba1-670c-087b-310695a43e93",
@@ -176,7 +263,8 @@
 			"name": "[GET] Survivor 1",
 			"description": "",
 			"collectionId": "43914fa3-b74e-ea50-7672-25001cb01b63",
-			"responses": []
+			"responses": [],
+			"folder": "45ea0693-cacd-f522-6395-1542b2c63287"
 		},
 		{
 			"id": "bd6113e2-ed4a-7428-bd6a-8df8f7db04d7",
@@ -195,7 +283,8 @@
 			"name": "[GET] Survivor 6 InfectionReports should be 3",
 			"description": "",
 			"collectionId": "43914fa3-b74e-ea50-7672-25001cb01b63",
-			"responses": []
+			"responses": [],
+			"folder": "45ea0693-cacd-f522-6395-1542b2c63287"
 		},
 		{
 			"id": "cd778be9-a032-f551-bebf-a264fcf26d53",
@@ -214,7 +303,27 @@
 			"name": "[GET]] All Survivors",
 			"description": "",
 			"collectionId": "43914fa3-b74e-ea50-7672-25001cb01b63",
-			"responses": []
+			"responses": [],
+			"folder": "45ea0693-cacd-f522-6395-1542b2c63287"
+		},
+		{
+			"id": "d449278a-0901-816c-22ae-d0021504430f",
+			"headers": "Content-Type: application/json\n",
+			"url": "http://localhost:5000/api/v1/update/trade",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": "var jsonData = JSON.parse(responseBody);\ntests[\"Code 0\"] = jsonData.code === 1;\ntests[\"Sucess!\"] = jsonData.message === \"Survivor can't trade\";",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1474973965446,
+			"name": "[POST] Trader infected",
+			"description": "",
+			"collectionId": "43914fa3-b74e-ea50-7672-25001cb01b63",
+			"responses": [],
+			"rawModeData": "{\"trade\":\n    [\n        {\n            \"id\":3,\n            \"itens\":\n            {\n                \"water\":1,\n                \"food\":2\n            }\n        },\n        {\n            \"id\":2,\n            \"itens\":{\n                \"medication\":2,\n                \"ammunition\":6\n            }\n        }\n    ]\n\t\n}"
 		},
 		{
 			"id": "e01d78a9-42c6-137b-c478-24933ca832e2",
@@ -233,6 +342,7 @@
 			"description": "",
 			"collectionId": "43914fa3-b74e-ea50-7672-25001cb01b63",
 			"responses": [],
+			"folder": "45ea0693-cacd-f522-6395-1542b2c63287",
 			"rawModeData": "{\n\t\"id\":{{id}},\n\t\"lastLocation\":{\n\t\t\"x\":12345.1,\n\t\t\"y\":64521.1\n\t}\n}"
 		},
 		{
@@ -250,6 +360,26 @@
 			"helperAttributes": {},
 			"time": 1474941691665,
 			"name": "[GET] Reports",
+			"description": "",
+			"collectionId": "43914fa3-b74e-ea50-7672-25001cb01b63",
+			"responses": [],
+			"folder": "45ea0693-cacd-f522-6395-1542b2c63287"
+		},
+		{
+			"id": "e6e90b9b-06df-7f89-ee62-6666297a9cfa",
+			"headers": "",
+			"url": "http://localhost:5000/api/v1/survivors/99asd",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": "tests[\"Status code is 404\"] = responseCode.code === 404;",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1474973810180,
+			"name": "[GET] Survivor invalid id",
 			"description": "",
 			"collectionId": "43914fa3-b74e-ea50-7672-25001cb01b63",
 			"responses": []
