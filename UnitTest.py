@@ -78,11 +78,11 @@ class TestApp(unittest.TestCase):
 
         self.assertEqual(200,requests.get('http://localhost:5000/api/v1/survivors').status_code)
 
-        response = postRequest('/api/v1/update/location',{"id":id,"lastLocation":{"x":12345.1,"y":64521.1}})
+        response = putRequest('/api/v1/update/location',{"id":id,"lastLocation":{"x":12345.1,"y":64521.1}})
         self.assertEqual(response[1],200)
         self.assertEqual(response[0]['updatedId'], id)
 
-        response = postRequest('/api/v1/update/trade',{"trade":
+        response = putRequest('/api/v1/update/trade',{"trade":
             [
                 {
                     "id":4,
@@ -102,7 +102,7 @@ class TestApp(unittest.TestCase):
         })
         self.assertEqual(response[1],200)
 
-        response = postRequest('/api/v1/update/trade',{"trade":
+        response = putRequest('/api/v1/update/trade',{"trade":
             [
                 {
                     "id":2,
@@ -122,7 +122,7 @@ class TestApp(unittest.TestCase):
         })
         self.assertEqual(response[1],200)
 
-        response = postRequest('/api/v1/update/trade',{"trade":
+        response = putRequest('/api/v1/update/trade',{"trade":
             [
                 {
                     "id":12,
@@ -146,7 +146,7 @@ class TestApp(unittest.TestCase):
         })
         self.assertEqual(response[1],400)
 
-        response = postRequest('/api/v1/update/trade',{"trade":
+        response = putRequest('/api/v1/update/trade',{"trade":
             [
                 { #id misspelled
                     "di":6,
@@ -171,15 +171,15 @@ class TestApp(unittest.TestCase):
         self.assertTrue(bool(response['canTrade']))
         # pdb.set_trace()
 
-        self.assertTrue(1 == postRequest('/api/v1/update/infected',{'id':id})[0]['reported'])
+        self.assertTrue(1 == putRequest('/api/v1/update/infected',{'id':id})[0]['reported'])
 
 
         response = requests.get('http://localhost:5000/api/v1/survivors/' + str(id)).json()
         self.assertTrue(bool(response['canTrade']))
-        self.assertTrue(1 == postRequest('/api/v1/update/infected',{'id':id})[0]['reported'])
+        self.assertTrue(1 == putRequest('/api/v1/update/infected',{'id':id})[0]['reported'])
         response = requests.get('http://localhost:5000/api/v1/survivors/' + str(id)).json()
         self.assertTrue(bool(response['canTrade']))
-        self.assertTrue(1 == postRequest('/api/v1/update/infected',{'id':id})[0]['reported'])
+        self.assertTrue(1 == putRequest('/api/v1/update/infected',{'id':id})[0]['reported'])
         response = requests.get('http://localhost:5000/api/v1/survivors/' + str(id)).json()
         self.assertFalse(bool(response['canTrade']))
         # (field 'name' spelled wrong)                 \/
@@ -191,6 +191,10 @@ def postRequest(route, data):
     response = requests.post('http://localhost:5000' + route,data=json.dumps(data),headers={'Content-Type':'application/json'})
     # print response
     # print response.json()
+    return (response.json(), response.status_code)
+
+def putRequest(route, data):
+    response = requests.put('http://localhost:5000' + route,data=json.dumps(data),headers={'Content-Type':'application/json'})
     return (response.json(), response.status_code)
 
 if __name__ == '__main__':

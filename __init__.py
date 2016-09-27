@@ -35,7 +35,7 @@ def getReports():
     return jsonify(reports()), 200
 
 # post update location
-@app.route('/api/v1/update/location', methods=['POST'])
+@app.route('/api/v1/update/location', methods=['PUT'])
 def updateLocation():
     try:
         result = db.updateLocation(request.json['id'], request.json['lastLocation']['x'], request.json['lastLocation']['y'])
@@ -63,7 +63,7 @@ def postNewSurvivor():
         abort(500)
     return jsonify({'insertedCount': 1, 'insertedId': newSurvivor._id, 'path':'/survivors/' + str(newSurvivor._id)}), 201
 
-@app.route('/api/v1/update/infected', methods=['POST'])
+@app.route('/api/v1/update/infected', methods=['PUT'])
 def reportInfected():
     try:
         _id = request.json['id']
@@ -77,7 +77,7 @@ def reportInfected():
     abort(500)
 
 # post a trade
-@app.route('/api/v1/update/trade', methods=['POST'])
+@app.route('/api/v1/update/trade', methods=['PUT'])
 def postTrade():
     try:
         # try to parse
