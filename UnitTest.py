@@ -184,7 +184,7 @@ class TestApp(unittest.TestCase):
         self.assertFalse(bool(response['canTrade']))
         # (field 'name' spelled wrong)                 \/
         response = postRequest('/api/v1/survivors', {"nami":"Douglas Adams","age":42,"gender":"M","lastLocation":{"x":21545.2,"y":12654.1},"inventory":{"water":1,"food":2,"medication":4,"ammunition":10}})
-        self.assertEqual(response[1],400)
+        self.assertEqual(response[1],422)
 
 
 def postRequest(route, data):
