@@ -46,6 +46,7 @@ class Survivor:
             }
         }
         return dictSurvivor
+        
     def getWater(self):
         return self.inventory['water']
     def getFood(self):
