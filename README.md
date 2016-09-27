@@ -15,6 +15,8 @@ Why Mongo? Simple, to try it out. I thought since this project is about know who
 
 As the zen of python says, basically the code should speak for itself, so in every line was mas with this in mind, so i've tried to not comment too.
 
+If you have any observation please send me a feedback, I would like to hear, even if a "no" come together. I just want to get better! [Email](mailto:caique.mitsuoka@gmail.com)
+
 ### Run, Forest, Run !
 
 If you use python on the machine where the code is going to run I recommend to create a Virtualenv, otherwise the frameworks shouldn't not conflict with anything.
@@ -45,3 +47,5 @@ Install MongoDB and a tutorial can be found [here](https://docs.mongodb.com/manu
 
 `$ python UnitTest.py
 `
+
+[Miiiiiiaaaun](https://www.youtube.com/watch?v=fhkgNTmrXFY)
