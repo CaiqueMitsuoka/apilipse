@@ -102,7 +102,7 @@ def not_found(error):
 
 @app.errorhandler(400)
 def coulnt_parse(error):
-    return make_response(jsonify({'error': 'Could\'t parse JSON'}), 400)
+    return make_response(jsonify({'error': 'Couldn\'t parse JSON'}), 400)
 
 @app.errorhandler(422)
 def coulnt_parse(error):
