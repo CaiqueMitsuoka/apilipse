@@ -45,7 +45,14 @@ Install MongoDB and a tutorial can be found [here](https://docs.mongodb.com/manu
 
 ##### Test:
 
+For inputs and test I made tests on UnitTest.py file. Trade is covered 100%.
+But then a friend showed to me Postman and then I've stopped to try to make the wheel again and used it as console.
+My test routine was the two test, with postman iterating 20-30 times to make sure everything was stable.
+
+So for inputs please use postman and import the tests.
+
 `$ python UnitTest.py
 `
+
 
 [Miiiiiiaaaun](https://www.youtube.com/watch?v=fhkgNTmrXFY)
