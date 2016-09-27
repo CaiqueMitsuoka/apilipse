@@ -57,7 +57,7 @@ def postNewSurvivor():
         newSurvivor = db.insert(str(request.json['name']),int(request.json['age']),str(request.json['gender']),(float(request.json['lastLocation']['x']),float(request.json['lastLocation']['y'])),dict(request.json['inventory']))
     except:
         # parse error
-        abort(400)
+        abort(422)
     if newSurvivor == None:
         # database error
         abort(500)
@@ -90,7 +90,7 @@ def postTrade():
         if trade(reqData):
             return jsonify({'code':0, 'message':'Sucess!', 'tradeRight':reqData['trade'][0]['id'], 'tradeLeft':reqData['trade'][1]['id']}), 200
         else:
-            return jsonify({'code':1,'message':'Survivor can\'trade', 'tradeRight':reqData['trade'][0]['id'], 'tradeLeft':reqData['trade'][1]['id']}), 400
+            return jsonify({'code':1,'message':'Survivor can\'t trade', 'tradeRight':reqData['trade'][0]['id'], 'tradeLeft':reqData['trade'][1]['id']}), 400
     except (KeyError, ValueError):
         abort(422)
     except:
