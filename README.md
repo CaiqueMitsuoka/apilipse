@@ -25,22 +25,22 @@ If you use python on the machine where the code is going to run I recommend to c
 
 Install MongoDB and a tutorial can be found [here](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/).
 
-`$ sudo service mongod start
-`
+Populate with a test database:
 
 `$ mongoimport --db apilipse --collection survivors --drop --file survivors.json
 `
 
-`$ sudo pip install flask
+`$ ./setup.sh
 `
 
-`$ sudo pip install pymongo
+If necessary give execution permition to the file
+
+`$ chmod +x setup.sh
 `
 
+##### Launch server and database:
 
-##### Launch server:
-
-`$ python __init__.py
+`$ ./init.sh
 `
 
 ##### Test:
