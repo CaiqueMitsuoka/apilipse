@@ -1,9 +1,7 @@
 # -*- coding: <UTF-8> -*-
 from flask import Flask,jsonify,abort,make_response,request
 import sys
-sys.path.append('/models')
-sys.path.append('/database')
-sys.path.append('/features')
+sys.path.append('modules')
 from survivor import Survivor
 from survivorDb import SurvivorDb
 from trade import trade
@@ -12,7 +10,7 @@ import json
 
 # instanciate flask and connect database
 app = Flask(__name__)
-db = SurvivorDb()
+db = SurvivorDb('survivors')
 
 @app.route('/', methods=['GET'])
 def version():
