@@ -1,2 +1,2 @@
 clean: find . -name '*.pyc' -delete
-web: python initApp.py
+worker: python initApp.py
