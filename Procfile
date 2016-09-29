@@ -1,2 +1,2 @@
 clean: find . -name '*.pyc' -delete
-worker: python initApp.py
+web: python initApp.py -p $PORT
