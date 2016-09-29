@@ -1,14 +1,18 @@
 # -*- coding: <UTF-8> -*-
 from flask import Flask,jsonify,abort,make_response,request
+import sys
+sys.path.append('/models')
+sys.path.append('/database')
+sys.path.append('/features')
 from survivor import Survivor
-from suvivorDb import SurvivorDb
+from survivorDb import SurvivorDb
 from trade import trade
 from report import reports
 import json
 
 # instanciate flask and connect database
 app = Flask(__name__)
-db = SurvivorDb('survivors')
+db = SurvivorDb()
 
 @app.route('/', methods=['GET'])
 def version():
