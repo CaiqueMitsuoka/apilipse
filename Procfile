@@ -1,1 +1,1 @@
-web: sh init.sh
+web: python __init__.py
