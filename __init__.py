@@ -10,6 +10,10 @@ import json
 app = Flask(__name__)
 db = SurvivorDb('survivors')
 
+@app.route('/', methods=['GET'])
+def version():
+    return jsonify({'Apilipse':'Api for the best zombie social network, always with you <3','version':'1.0'})
+
 # get all the survivors
 @app.route('/api/v1/survivors', methods=['GET'])
 def getAllSurvivors():
@@ -128,4 +132,4 @@ def jsonToSuvivor(s):
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')

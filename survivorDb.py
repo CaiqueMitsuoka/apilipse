@@ -6,7 +6,7 @@ class SurvivorDb:
     def __init__(self, database):
         global db
         try:
-            db = MongoClient().apilipse[database]
+            db = MongoClient('mongodb://herokuclient:abacaxi6@ds029837.mlab.com:29837/heroku_5l2fpwrs').db.apilipse
             db.find({})
         except pymongo.errors.ServerSelectionTimeoutError:
             print "Database is taking too long to responde\nIs it running?\n - ServerSelectionTimeoutError"
