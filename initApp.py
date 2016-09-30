@@ -6,6 +6,7 @@ from survivor import Survivor
 from survivorDb import SurvivorDb
 from trade import trade
 from report import reports
+import os
 import json
 
 # instanciate flask and connect database
@@ -134,4 +135,5 @@ def jsonToSuvivor(s):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0',port=port)
