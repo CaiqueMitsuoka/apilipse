@@ -2,13 +2,15 @@ import sys
 import unittest
 import requests
 import json
-import pdb;
+import pdb
+import random
 sys.path.append('modules')
 from survivor import Survivor
 from survivorDb import SurvivorDb
 from trade import assignContent, Trader, getTraders, verifyIntegrity, trade
 
-uri = 'https://apilipse.herokuapp.com/'
+uri = 'https://apilipse.herokuapp.com/api/v1/'
+# uri = 'http://localhost:5000/api/v1/'
 
 class TestSurvivorClass(unittest.TestCase):
     def test_init(self):
@@ -82,18 +84,27 @@ class TestApp(unittest.TestCase):
     # I made my own test
     # I did TDD but with curl, but now all cases are imported here.
     # There is also a Postman test
-    def test_app(self):
-        response = postRequest('api/v1/survivors', {"name":"Douglas Adams","age":42,"gender":"M","lastLocation":{"x":21545.2,"y":12654.1},"inventory":{"water":1,"food":2,"medication":4,"ammunition":10}})
+
+    def test_getAll(self):
+        self.assertEqual(200,requests.get(uri + 'survivors').status_code)
+
+    def test_insertPost(self):
+        response = postRequest('survivors', {"name":"Douglas Adams","age":42,"gender":"M","lastLocation":{"x":21545.2,"y":12654.1},"inventory":{"water":1,"food":2,"medication":4,"ammunition":10}})
         self.assertEqual(response[1],201)
-        id = response[0]['insertedId']
 
-        self.assertEqual(200,requests.get(uri + 'api/v1/survivors').status_code)
+        # (field 'name' spelled wrong)                 \/
+        response = postRequest('survivors', {"nami":"Douglas Adams","age":42,"gender":"M","lastLocation":{"x":21545.2,"y":12654.1},"inventory":{"water":1,"food":2,"medication":4,"ammunition":10}})
+        self.assertEqual(response[1],422)
 
-        response = putRequest('api/v1/update/location',{"id":id,"lastLocation":{"x":12345.1,"y":64521.1}})
+    def randm(self):
+        return random.random() * 10000
+
+    def test_apiUpdateLocation(self):
+        response = putRequest('update/location',{"id":6,"lastLocation":{"x":self.randm(),"y":self.randm()}})
         self.assertEqual(response[1],200)
-        self.assertEqual(response[0]['updatedId'], id)
 
-        response = putRequest('api/v1/update/trade',{"trade":
+    def test_apiTrade(self):
+        response = putRequest('update/trade',{"trade":
             [
                 {
                     "id":4,
@@ -112,8 +123,8 @@ class TestApp(unittest.TestCase):
             ]
         })
         self.assertEqual(response[1],200)
-
-        response = putRequest('api/v1/update/trade',{"trade":
+        # same trade, but oposite, for persistance of the test
+        response = putRequest('update/trade',{"trade":
             [
                 {
                     "id":2,
@@ -133,7 +144,7 @@ class TestApp(unittest.TestCase):
         })
         self.assertEqual(response[1],200)
 
-        response = putRequest('api/v1/update/trade',{"trade":
+        response = putRequest('update/trade',{"trade":
             [
                 {
                     "id":12,
@@ -157,7 +168,7 @@ class TestApp(unittest.TestCase):
         })
         self.assertEqual(response[1],400)
 
-        response = putRequest('api/v1/update/trade',{"trade":
+        response = putRequest('update/trade',{"trade":
             [
                 { #id misspelled
                     "di":6,
@@ -177,25 +188,31 @@ class TestApp(unittest.TestCase):
         })
         self.assertEqual(response[1],422)
 
-
-        response = requests.get(uri + 'api/v1/survivors/' + str(id)).json()
+    def test_apiReportInfected(self):
+        # check if survivor can trade
+        surv = {"name":"Douglas Adams","age":42,"gender":"M","lastLocation":{"x":21545.2,"y":12654.1},"inventory":{"water":1,"food":2,"medication":4,"ammunition":10}}
+        id = postRequest('survivors', surv)[0]['insertedId']
+        uriSurv = uri + 'survivors/' + str(id)
+        sendJson = {'id':id}
+        response = requests.get(uriSurv).json()
         self.assertTrue(bool(response['canTrade']))
         # pdb.set_trace()
 
-        self.assertTrue(1 == putRequest('api/v1/update/infected',{'id':id})[0]['reported'])
+        self.assertTrue(1 == putRequest('update/infected',sendJson)[0]['reported'])
 
 
-        response = requests.get(uri + 'api/v1/survivors/' + str(id)).json()
+        response = requests.get(uriSurv).json()
         self.assertTrue(bool(response['canTrade']))
-        self.assertTrue(1 == putRequest('api/v1/update/infected',{'id':id})[0]['reported'])
-        response = requests.get(uri + 'api/v1/survivors/' + str(id)).json()
+        self.assertTrue(1 == putRequest('update/infected',sendJson)[0]['reported'])
+        response = requests.get(uriSurv).json()
         self.assertTrue(bool(response['canTrade']))
-        self.assertTrue(1 == putRequest('api/v1/update/infected',{'id':id})[0]['reported'])
-        response = requests.get(uri + 'api/v1/survivors/' + str(id)).json()
+        self.assertTrue(1 == putRequest('update/infected',sendJson)[0]['reported'])
+        response = requests.get(uriSurv).json()
         self.assertFalse(bool(response['canTrade']))
-        # (field 'name' spelled wrong)                 \/
-        response = postRequest('api/v1/survivors', {"nami":"Douglas Adams","age":42,"gender":"M","lastLocation":{"x":21545.2,"y":12654.1},"inventory":{"water":1,"food":2,"medication":4,"ammunition":10}})
-        self.assertEqual(response[1],422)
+
+    def apiResports(self):
+        response_cod = requests.get(uri + '/reports').status_code
+        self.assertEqual(200,response_cod)
 
 
 def postRequest(route, data):
