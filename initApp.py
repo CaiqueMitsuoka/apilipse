@@ -11,7 +11,6 @@ import json
 
 # instanciate flask and connect database
 app = Flask(__name__)
-db = SurvivorDb('survivors')
 
 @app.route('/', methods=['GET'])
 def version():
@@ -60,15 +59,17 @@ def updateLocation():
 # post new survivor
 @app.route('/api/v1/survivors', methods=['POST'])
 def postNewSurvivor():
-    try:
-        newSurvivor = db.insert(str(request.json['name']),int(request.json['age']),str(request.json['gender']),(float(request.json['lastLocation']['x']),float(request.json['lastLocation']['y'])),dict(request.json['inventory']))
-    except:
-        # parse error
-        abort(422)
-    if newSurvivor == None:
+    data = request.json
+    newSurvivor = Survivor(0,data)
+    # try:
+    # except:
+    #     # parse error
+    #     abort(422)
+    resp = db.insert(newSurvivor)
+    if resp == None:
         # database error
         abort(500)
-    return jsonify({'insertedCount': 1, 'insertedId': newSurvivor._id, 'path':'/survivors/' + str(newSurvivor._id)}), 201
+    return jsonify({'insertedCount': 1, 'insertedId': resp._id, 'path':'/survivors/' + str(resp._id)}), 201
 
 @app.route('/api/v1/update/infected', methods=['PUT'])
 def reportInfected():
@@ -123,17 +124,14 @@ def jsonToSuvivor(s):
     survivorDic = json.loads(s)
     return Survivor(
         survivorDic['id'],
-        survivorDic['name'],
-        survivorDic['age'],
-        survivorDic['gender'],
-        survivorDic['lastLocation']['x'],
-        survivorDic['lastLocation']['y'],
-        survivorDic['inventory'],
+        survivorDic,
         survivorDic['infectionReports']
     )
 
 
 
 if __name__ == '__main__':
+    db = SurvivorDb('survivors')
+
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0',port=port)
+    app.run(host='0.0.0.0',port=port,debug=True)

@@ -4,7 +4,6 @@ import pymongo
 
 class SurvivorDb:
 
-
     def __init__(self,database):
         global db
         try:
@@ -18,12 +17,7 @@ class SurvivorDb:
     def dataToSurvivor(self, survData):
         return Survivor(
             survData['_id'],
-            survData['name'],
-            survData['age'],
-            survData['gender'],
-            survData['lastLocation']['x'],
-            survData['lastLocation']['y'],
-            survData['inventory'],
+            survData,
             survData['infectionReports']
         )
 
@@ -37,28 +31,31 @@ class SurvivorDb:
             return None
         return self.dataToSurvivor(survivorData)
 
-    def insert(self, name, age, gender, lastLocation , inventory):
-        if(isinstance(name,str) and isinstance(age, int) and isinstance(gender,str) and isinstance(lastLocation, tuple) and
-        isinstance(lastLocation[0], float) and isinstance(lastLocation[1], float) and isinstance(inventory, dict)):
-            survivor = {
+    def insert(self, objSurvivor):
+        survivor = {
             '_id': self.maxid() + 1,
-            'name': name,
-            'age': age,
-            'gender': gender,
+            'name': objSurvivor.getName(),
+            'age': objSurvivor.getAge(),
+            'gender': objSurvivor.getGender(),
             'lastLocation':{
-            'x':lastLocation[0],
-            'y':lastLocation[1]
+                'x':objSurvivor.getLastLocationY(),
+                'y':objSurvivor.getLastLocationX()
             },
-            'inventory': inventory,
+            'inventory': {
+                'water': objSurvivor.getWater(),
+                'food': objSurvivor.getFood(),
+                'medication': objSurvivor.getMedication(),
+                'ammunition': objSurvivor.getAmmunition()
+            },
             'infectionReports': 0
-            }
-        else:
-            raise TypeError('Incorrect type')
+        }
+
         try:
             _id = db.insert_one(survivor).inserted_id
         except ServerSelectionTimeoutError:
             return None
-        return Survivor(_id, name, age, gender, lastLocation[0],lastLocation[1], inventory, 0)
+        objSurvivor.setId(_id)
+        return objSurvivor
 
     def updateById(self, _id, field, value):
         try:
