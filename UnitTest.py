@@ -1,10 +1,14 @@
+import sys
 import unittest
 import requests
 import json
 import pdb;
+sys.path.append('modules')
 from survivor import Survivor
 from survivorDb import SurvivorDb
 from trade import assignContent, Trader, getTraders, verifyIntegrity, trade
+
+uri = 'https://apilipse.herokuapp.com/'
 
 class TestSurvivorClass(unittest.TestCase):
     def test_init(self):
@@ -39,12 +43,15 @@ class TestSurvivorClass(unittest.TestCase):
                 "ammunition": 20
             }
         })
+
 class TestTrade(unittest.TestCase):
     def test_assignContent(self):
         self.assertEqual([1,3,5,2], assignContent({'water':1,'food':3,'medication':5,'ammunition':2}))
         self.assertEqual([0,3,0,0], assignContent({'food':3}))
         self.assertEqual([0,0,1,1], assignContent({'medication':1,'ammunition':1}))
         self.assertEqual([0,0,0,0], assignContent({}))
+
+    def test_getTraders(self):
         self.assertEqual([], getTraders({'trade':[{'id':3,'itens':{'water':2}}]}))
         self.assertEqual([], getTraders({}))
         goodIntegrity = getTraders({'trade':[{'id':12,'itens':{'water':3}},{'id':24,'itens':{'food':2,'medication':2,'ammunition':2}}]})
@@ -55,6 +62,8 @@ class TestTrade(unittest.TestCase):
         self.assertEqual(12,goodIntegrity[1].getTotalPoints())
         self.assertTrue(goodIntegrity[1].canGiveItens(db))
         self.assertEqual(24,goodIntegrity[1].id)
+
+    def test_verifyIntegrity(self):
         self.assertTrue(verifyIntegrity({'trade':[{'id':0,'itens':{}},{'id':0,'itens':{}}]}))
         self.assertFalse(verifyIntegrity({'trade':[{'id':0,'itens':{}},{'ideas':0,'itens':{}}]}))
         self.assertFalse(verifyIntegrity({'trade':[{'id':0,'itens':{}},{'id':0,'itensasd':{}}]}))
@@ -62,6 +71,8 @@ class TestTrade(unittest.TestCase):
         self.assertFalse(verifyIntegrity({'trade':[{'itens':{}},{'id':0,'itens':{}}]}))
         self.assertFalse(verifyIntegrity({'trade':[]}))
         self.assertFalse(verifyIntegrity({}))
+
+    def test_trade(self):
         self.assertTrue(trade({'trade':[{'id':12,'itens':{'water':3}},{'id':24,'itens':{'food':2,'medication':2,'ammunition':2}}]}))
         self.assertTrue(trade({'trade':[{'id':24,'itens':{'water':3}},{'id':12,'itens':{'food':2,'medication':2,'ammunition':2}}]}))
 
@@ -72,17 +83,17 @@ class TestApp(unittest.TestCase):
     # I did TDD but with curl, but now all cases are imported here.
     # There is also a Postman test
     def test_app(self):
-        response = postRequest('/api/v1/survivors', {"name":"Douglas Adams","age":42,"gender":"M","lastLocation":{"x":21545.2,"y":12654.1},"inventory":{"water":1,"food":2,"medication":4,"ammunition":10}})
+        response = postRequest('api/v1/survivors', {"name":"Douglas Adams","age":42,"gender":"M","lastLocation":{"x":21545.2,"y":12654.1},"inventory":{"water":1,"food":2,"medication":4,"ammunition":10}})
         self.assertEqual(response[1],201)
         id = response[0]['insertedId']
 
-        self.assertEqual(200,requests.get('http://localhost:5000/api/v1/survivors').status_code)
+        self.assertEqual(200,requests.get(uri + 'api/v1/survivors').status_code)
 
-        response = putRequest('/api/v1/update/location',{"id":id,"lastLocation":{"x":12345.1,"y":64521.1}})
+        response = putRequest('api/v1/update/location',{"id":id,"lastLocation":{"x":12345.1,"y":64521.1}})
         self.assertEqual(response[1],200)
         self.assertEqual(response[0]['updatedId'], id)
 
-        response = putRequest('/api/v1/update/trade',{"trade":
+        response = putRequest('api/v1/update/trade',{"trade":
             [
                 {
                     "id":4,
@@ -102,7 +113,7 @@ class TestApp(unittest.TestCase):
         })
         self.assertEqual(response[1],200)
 
-        response = putRequest('/api/v1/update/trade',{"trade":
+        response = putRequest('api/v1/update/trade',{"trade":
             [
                 {
                     "id":2,
@@ -122,7 +133,7 @@ class TestApp(unittest.TestCase):
         })
         self.assertEqual(response[1],200)
 
-        response = putRequest('/api/v1/update/trade',{"trade":
+        response = putRequest('api/v1/update/trade',{"trade":
             [
                 {
                     "id":12,
@@ -146,7 +157,7 @@ class TestApp(unittest.TestCase):
         })
         self.assertEqual(response[1],400)
 
-        response = putRequest('/api/v1/update/trade',{"trade":
+        response = putRequest('api/v1/update/trade',{"trade":
             [
                 { #id misspelled
                     "di":6,
@@ -167,34 +178,34 @@ class TestApp(unittest.TestCase):
         self.assertEqual(response[1],422)
 
 
-        response = requests.get('http://localhost:5000/api/v1/survivors/' + str(id)).json()
+        response = requests.get(uri + 'api/v1/survivors/' + str(id)).json()
         self.assertTrue(bool(response['canTrade']))
         # pdb.set_trace()
 
-        self.assertTrue(1 == putRequest('/api/v1/update/infected',{'id':id})[0]['reported'])
+        self.assertTrue(1 == putRequest('api/v1/update/infected',{'id':id})[0]['reported'])
 
 
-        response = requests.get('http://localhost:5000/api/v1/survivors/' + str(id)).json()
+        response = requests.get(uri + 'api/v1/survivors/' + str(id)).json()
         self.assertTrue(bool(response['canTrade']))
-        self.assertTrue(1 == putRequest('/api/v1/update/infected',{'id':id})[0]['reported'])
-        response = requests.get('http://localhost:5000/api/v1/survivors/' + str(id)).json()
+        self.assertTrue(1 == putRequest('api/v1/update/infected',{'id':id})[0]['reported'])
+        response = requests.get(uri + 'api/v1/survivors/' + str(id)).json()
         self.assertTrue(bool(response['canTrade']))
-        self.assertTrue(1 == putRequest('/api/v1/update/infected',{'id':id})[0]['reported'])
-        response = requests.get('http://localhost:5000/api/v1/survivors/' + str(id)).json()
+        self.assertTrue(1 == putRequest('api/v1/update/infected',{'id':id})[0]['reported'])
+        response = requests.get(uri + 'api/v1/survivors/' + str(id)).json()
         self.assertFalse(bool(response['canTrade']))
         # (field 'name' spelled wrong)                 \/
-        response = postRequest('/api/v1/survivors', {"nami":"Douglas Adams","age":42,"gender":"M","lastLocation":{"x":21545.2,"y":12654.1},"inventory":{"water":1,"food":2,"medication":4,"ammunition":10}})
+        response = postRequest('api/v1/survivors', {"nami":"Douglas Adams","age":42,"gender":"M","lastLocation":{"x":21545.2,"y":12654.1},"inventory":{"water":1,"food":2,"medication":4,"ammunition":10}})
         self.assertEqual(response[1],422)
 
 
 def postRequest(route, data):
-    response = requests.post('http://localhost:5000' + route,data=json.dumps(data),headers={'Content-Type':'application/json'})
+    response = requests.post(uri + route,data=json.dumps(data),headers={'Content-Type':'application/json'})
     # print response
     # print response.json()
     return (response.json(), response.status_code)
 
 def putRequest(route, data):
-    response = requests.put('http://localhost:5000' + route,data=json.dumps(data),headers={'Content-Type':'application/json'})
+    response = requests.put(uri + route,data=json.dumps(data),headers={'Content-Type':'application/json'})
     return (response.json(), response.status_code)
 
 if __name__ == '__main__':
