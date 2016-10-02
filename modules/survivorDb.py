@@ -3,12 +3,11 @@ from survivor import Survivor
 import pymongo
 
 class SurvivorDb:
-
+    db = None
     def __init__(self,database):
-        global db
         try:
-            db = MongoClient('mongodb://serverv1:adb123@ds029837.mlab.com:29837/heroku_5l2fpwrs').get_default_database()['survivors']
-            db.find({})
+            self.db = MongoClient('mongodb://serverv1:adb123@ds029837.mlab.com:29837/heroku_5l2fpwrs').get_default_database()[database]
+            self.db.find({})
         except pymongo.errors.ServerSelectionTimeoutError:
             print "Database is taking too long to responde\nIs it running?\n - ServerSelectionTimeoutError"
         except pymongo.errors.ConnectionFailure:
@@ -26,7 +25,7 @@ class SurvivorDb:
 
     def searchById(self, _id):
         try:
-            survivorData = db.find({'_id': int(_id)})[0]
+            survivorData = self.db.find({'_id': int(_id)})[0]
         except:
             return None
         return self.dataToSurvivor(survivorData)
@@ -51,15 +50,16 @@ class SurvivorDb:
         }
 
         try:
-            _id = db.insert_one(survivor).inserted_id
+            _id = self.db.insert_one(survivor).inserted_id
+            print _id
         except ServerSelectionTimeoutError:
             return None
-        objSurvivor.setId(_id)
-        return objSurvivor
+        objSurvivor._id = _id
+        return objSurvivor.survivorToDic()
 
     def updateById(self, _id, field, value):
         try:
-            return db.update_one({'_id': _id},{"$set":{field: value}})
+            return self.db.update_one({'_id': _id},{"$set":{field: value}})
         except:
             return None
 
@@ -70,13 +70,13 @@ class SurvivorDb:
 
     def searchByQuery(self, query):
         survivorsList = []
-        cursor = db.find(query)
+        cursor = self.db.find(query)
         for survivor in cursor:
             survivorsList.append(self.dataToSurvivor(survivor))
         return survivorsList
 
     def maxid(self):
-        return db.find_one(sort=[("_id", -1)])['_id']
+        return self.db.find_one(sort=[("_id", -1)])['_id']
 
     def updateLocation(self, _id, lat, lon):
         try:

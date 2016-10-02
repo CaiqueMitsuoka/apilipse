@@ -4,7 +4,7 @@ import sys
 sys.path.append('modules')
 from survivor import Survivor
 from survivorDb import SurvivorDb
-from trade import trade
+# from trade import trade
 from report import reports
 import os
 import json
@@ -59,17 +59,17 @@ def updateLocation():
 # post new survivor
 @app.route('/api/v1/survivors', methods=['POST'])
 def postNewSurvivor():
-    data = request.json
-    newSurvivor = Survivor(0,data)
-    # try:
-    # except:
-    #     # parse error
-    #     abort(422)
+    try:
+        data = request.json
+        newSurvivor = Survivor(0,data)
+    except:
+        # parse error
+        abort(422)
     resp = db.insert(newSurvivor)
     if resp == None:
         # database error
         abort(500)
-    return jsonify({'insertedCount': 1, 'insertedId': resp._id, 'path':'/survivors/' + str(resp._id)}), 201
+    return jsonify(resp), 201
 
 @app.route('/api/v1/update/infected', methods=['PUT'])
 def reportInfected():
@@ -85,24 +85,24 @@ def reportInfected():
     abort(500)
 
 # post a trade
-@app.route('/api/v1/update/trade', methods=['PUT'])
-def postTrade():
-    try:
-        # try to parse
-        reqData = request.json
-    except:
-        # parse error
-        abort(400)
-    try:
-        # call trade
-        if trade(reqData):
-            return jsonify({'code':0, 'message':'Sucess!', 'tradeRight':reqData['trade'][0]['id'], 'tradeLeft':reqData['trade'][1]['id']}), 200
-        else:
-            return jsonify({'code':1,'message':'Survivor can\'t trade', 'tradeRight':reqData['trade'][0]['id'], 'tradeLeft':reqData['trade'][1]['id']}), 400
-    except (KeyError, ValueError):
-        abort(422)
-    except:
-        abort(404)
+# @app.route('/api/v1/update/trade', methods=['PUT'])
+# def postTrade():
+#     try:
+#         # try to parse
+#         reqData = request.json
+#     except:
+#         # parse error
+#         abort(400)
+#     try:
+#         # call trade
+#         if trade(reqData):
+#             return jsonify({'code':0, 'message':'Sucess!', 'tradeRight':reqData['trade'][0]['id'], 'tradeLeft':reqData['trade'][1]['id']}), 200
+#         else:
+#             return jsonify({'code':1,'message':'Survivor can\'t trade', 'tradeRight':reqData['trade'][0]['id'], 'tradeLeft':reqData['trade'][1]['id']}), 400
+#     except (KeyError, ValueError):
+#         abort(422)
+#     except:
+#         abort(404)
 
 @app.errorhandler(404)
 def not_found(error):

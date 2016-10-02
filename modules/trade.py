@@ -1,27 +1,6 @@
 from survivor import Survivor
 from survivorDb import SurvivorDb
 
-class Trader:
-    id = 0
-    water = 0
-    food = 0
-    medication = 0
-    ammunition = 0
-    inventory = {}
-    def __init__(self, data, id):
-        self.id = id
-        self.water, self.food, self.medication, self.ammunition = data
-
-    def getTotalPoints(self):
-        return self.water * 4 + self.food * 3 + self.medication * 2 + self.ammunition
-
-    def canGiveItens(self,db):
-        survivor = db.searchById(self.id)
-        if not (survivor == None) and survivor.canTrade():
-            self.inventory = survivor.inventory
-            if (self.inventory['water'] >= self.water) and (self.inventory['food'] >= self.food) and (self.inventory['medication'] >= self.medication) and (self.inventory['ammunition'] >= self.ammunition):
-                return True
-        return False
 
     def listItens(self):
         return [self.water,self.food,self.medication,self.ammunition]
@@ -55,7 +34,7 @@ def assignContent(itens):
     return listItens
 
 # aqui soh entra dict ja parseado
-def getTraders(data):
+def getTraders(data,db):
     try:
         # vetorizar po
         p1 = data['trade'][0]
@@ -76,8 +55,8 @@ def verifyIntegrity(data):
 
 def trade(data):
     if verifyIntegrity(data):
-        tradeRight, tradeLeft = getTraders(data)
         db = SurvivorDb('survivors')
+        tradeRight, tradeLeft = getTraders(data,db)
         if tradeLeft.canGiveItens(db) and tradeRight.canGiveItens(db):
             if tradeRight.prepareTrade(tradeLeft.listItens()) and tradeLeft.prepareTrade(tradeRight.listItens()):
                 tradeLeft.commitTrade(db)

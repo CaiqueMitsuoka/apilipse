@@ -7,7 +7,7 @@ import random
 sys.path.append('modules')
 from survivor import Survivor
 from survivorDb import SurvivorDb
-from trade import assignContent, Trader, getTraders, verifyIntegrity, trade
+# from trade import assignContent, Trader, getTraders, verifyIntegrity, trade
 
 # uri = 'https://apilipse.herokuapp.com/api/v1/'
 uri = 'http://localhost:5000/api/v1/'
@@ -45,41 +45,49 @@ class TestSurvivorClass(unittest.TestCase):
                 "ammunition": 20
             }
         })
-    # def test_setInventory(self):
-    #     survivorTest = Survivor(1,{'name':'paranaue','age': 21,'gender': 'M','lastLocation':{'x': 15484.3,'y': 22548.1},'inventory': {'water':1,'food':2,'medication':1,'ammunition': 20}})
+
+    def test_canGiveItens(self):
+        survivorTest = Survivor(1,{'name':'paranaue','age': 21,'gender': 'M','lastLocation':{'x': 15484.3,'y': 22548.1},'inventory': {'water':1,'food':2,'medication':1,'ammunition': 20}})
+        self.assertTrue(survivorTest.canGiveItens([1,2,1,20]))
+        self.assertFalse(survivorTest.canGiveItens([2,2,1,20]))
+        self.assertFalse(survivorTest.canGiveItens([1,3,1,20]))
+        self.assertFalse(survivorTest.canGiveItens([1,2,2,20]))
+        self.assertFalse(survivorTest.canGiveItens([1,2,1,21]))
+        self.assertTrue(survivorTest.canGiveItens([0,0,0,0]))
 
 
-class TestTrade(unittest.TestCase):
-    def test_assignContent(self):
-        self.assertEqual([1,3,5,2], assignContent({'water':1,'food':3,'medication':5,'ammunition':2}))
-        self.assertEqual([0,3,0,0], assignContent({'food':3}))
-        self.assertEqual([0,0,1,1], assignContent({'medication':1,'ammunition':1}))
-        self.assertEqual([0,0,0,0], assignContent({}))
 
-    def test_getTraders(self):
-        self.assertEqual([], getTraders({'trade':[{'id':3,'itens':{'water':2}}]}))
-        self.assertEqual([], getTraders({}))
-        goodIntegrity = getTraders({'trade':[{'id':12,'itens':{'water':3}},{'id':24,'itens':{'food':2,'medication':2,'ammunition':2}}]})
-        self.assertEqual(2,len(goodIntegrity))
-        self.assertEqual(12,goodIntegrity[0].id)
-        self.assertEqual(12,goodIntegrity[0].getTotalPoints())
-        self.assertTrue(goodIntegrity[0].canGiveItens(db))
-        self.assertEqual(12,goodIntegrity[1].getTotalPoints())
-        self.assertTrue(goodIntegrity[1].canGiveItens(db))
-        self.assertEqual(24,goodIntegrity[1].id)
-
-    def test_verifyIntegrity(self):
-        self.assertTrue(verifyIntegrity({'trade':[{'id':0,'itens':{}},{'id':0,'itens':{}}]}))
-        self.assertFalse(verifyIntegrity({'trade':[{'id':0,'itens':{}},{'ideas':0,'itens':{}}]}))
-        self.assertFalse(verifyIntegrity({'trade':[{'id':0,'itens':{}},{'id':0,'itensasd':{}}]}))
-        self.assertFalse(verifyIntegrity({'trade':[{'id':0,'itens':{}},{'id':0}]}))
-        self.assertFalse(verifyIntegrity({'trade':[{'itens':{}},{'id':0,'itens':{}}]}))
-        self.assertFalse(verifyIntegrity({'trade':[]}))
-        self.assertFalse(verifyIntegrity({}))
-
-    def test_trade(self):
-        self.assertTrue(trade({'trade':[{'id':12,'itens':{'water':3}},{'id':24,'itens':{'food':2,'medication':2,'ammunition':2}}]}))
-        self.assertTrue(trade({'trade':[{'id':24,'itens':{'water':3}},{'id':12,'itens':{'food':2,'medication':2,'ammunition':2}}]}))
+# class TestTrade(unittest.TestCase):
+#     def test_assignContent(self):
+#         self.assertEqual([1,3,5,2], assignContent({'water':1,'food':3,'medication':5,'ammunition':2}))
+#         self.assertEqual([0,3,0,0], assignContent({'food':3}))
+#         self.assertEqual([0,0,1,1], assignContent({'medication':1,'ammunition':1}))
+#         self.assertEqual([0,0,0,0], assignContent({}))
+#
+#     def test_getTraders(self):
+#         self.assertEqual([], getTraders({'trade':[{'id':3,'itens':{'water':2}}]}))
+#         self.assertEqual([], getTraders({}))
+#         goodIntegrity = getTraders({'trade':[{'id':12,'itens':{'water':3}},{'id':24,'itens':{'food':2,'medication':2,'ammunition':2}}]})
+#         self.assertEqual(2,len(goodIntegrity))
+#         self.assertEqual(12,goodIntegrity[0].id)
+#         self.assertEqual(12,goodIntegrity[0].getTotalPoints())
+#         self.assertTrue(goodIntegrity[0].canGiveItens(db))
+#         self.assertEqual(12,goodIntegrity[1].getTotalPoints())
+#         self.assertTrue(goodIntegrity[1].canGiveItens(db))
+#         self.assertEqual(24,goodIntegrity[1].id)
+#
+#     def test_verifyIntegrity(self):
+#         self.assertTrue(verifyIntegrity({'trade':[{'id':0,'itens':{}},{'id':0,'itens':{}}]}))
+#         self.assertFalse(verifyIntegrity({'trade':[{'id':0,'itens':{}},{'ideas':0,'itens':{}}]}))
+#         self.assertFalse(verifyIntegrity({'trade':[{'id':0,'itens':{}},{'id':0,'itensasd':{}}]}))
+#         self.assertFalse(verifyIntegrity({'trade':[{'id':0,'itens':{}},{'id':0}]}))
+#         self.assertFalse(verifyIntegrity({'trade':[{'itens':{}},{'id':0,'itens':{}}]}))
+#         self.assertFalse(verifyIntegrity({'trade':[]}))
+#         self.assertFalse(verifyIntegrity({}))
+#
+#     def test_trade(self):
+#         self.assertTrue(trade({'trade':[{'id':12,'itens':{'water':3}},{'id':24,'itens':{'food':2,'medication':2,'ammunition':2}}]}))
+#         self.assertTrue(trade({'trade':[{'id':24,'itens':{'water':3}},{'id':12,'itens':{'food':2,'medication':2,'ammunition':2}}]}))
 
 
 class TestApp(unittest.TestCase):
@@ -194,7 +202,7 @@ class TestApp(unittest.TestCase):
     def test_apiReportInfected(self):
         # check if survivor can trade
         surv = {"name":"Douglas Adams","age":42,"gender":"M","lastLocation":{"x":21545.2,"y":12654.1},"inventory":{"water":1,"food":2,"medication":4,"ammunition":10}}
-        id = postRequest('survivors', surv)[0]['insertedId']
+        id = postRequest('survivors', surv)[0]['id']
         uriSurv = uri + 'survivors/' + str(id)
         sendJson = {'id':id}
         response = requests.get(uriSurv).json()

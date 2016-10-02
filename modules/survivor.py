@@ -58,8 +58,17 @@ class Survivor:
         }
         return dictSurvivor
 
-    def setId(self,id):
-        self.id = id
+    def getTotalPoints(self):
+        return self.water * 4 + self.food * 3 + self.medication * 2 + self.ammunition
+
+    def canGiveItens(self, givingItens):
+        if self.canTrade():
+            if (givingItens[0] <= self.water) and (givingItens[1] <= self.food) and (givingItens[2] <= self.medication) and (givingItens[3] <= self.ammunition):
+                return True
+        return False
+
+    def setId(self,_id):
+        self._id = _id
     def getName(self):
         return self.name
     def getAge(self):
