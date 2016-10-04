@@ -1,49 +1,15 @@
 from survivor import Survivor
 from survivorDb import SurvivorDb
 
-
-    def listItens(self):
-        return [self.water,self.food,self.medication,self.ammunition]
-
-    def prepareTrade(self, receive):
-        # self.inventory = db.searchById(self.id).inventory
-        self.inventory['water'] = (self.inventory['water'] - self.water) + receive[0]
-        self.inventory['food'] = (self.inventory['food'] - self.food) + receive[1]
-        self.inventory['medication'] = (self.inventory['medication'] - self.medication) + receive[2]
-        self.inventory['ammunition'] = (self.inventory['ammunition'] - self.ammunition) + receive[3]
-        qtt = 0
-        for item in self.inventory:
-            if item >= 0:
-                qtt += 1
-        if qtt == len(self.inventory):
-            return True
-        return False
-
-    def commitTrade(self,db):
-        r = db.updateById(self.id,'inventory',self.inventory)
-        return r
-
 def assignContent(itens):
     typeItens = ['water','food','medication','ammunition']
-    listItens = []
+    listItens = {}
     for a in range(len(typeItens)):
         if typeItens[a] in itens:
-            listItens.append(itens[typeItens[a]])
+            listItens[typeItens[a]] = itens[typeItens[a]]
         else:
-            listItens.append(0)
+            listItens[typeItens[a]] = 0
     return listItens
-
-# aqui soh entra dict ja parseado
-def getTraders(data,db):
-    try:
-        # vetorizar po
-        p1 = data['trade'][0]
-        p2 = data['trade'][1]
-        tradeRight = Trader(assignContent(p1['itens']),p1['id'] )
-        tradeLeft = Trader(assignContent(p2['itens']), p2['id'] )
-        return [tradeRight,tradeLeft]
-    except (KeyError, ValueError, IndexError ):
-        return []
 
 def verifyIntegrity(data):
     if ('trade' in data and len(data['trade']) == 2):
@@ -53,18 +19,50 @@ def verifyIntegrity(data):
                 return True
     return False
 
+def calcPoints(itens):
+    return itens['water'] * 4 + itens['food'] * 3 + itens['medication'] * 2 + itens['ammunition']
+
+def equalPoints(itensLeft,itensRight):
+    if calcPoints(itensLeft) == calcPoints(itensRight):
+        return True
+    return False
+
 def trade(data):
     if verifyIntegrity(data):
         db = SurvivorDb('survivors')
-        tradeRight, tradeLeft = getTraders(data,db)
-        if tradeLeft.canGiveItens(db) and tradeRight.canGiveItens(db):
-            if tradeRight.prepareTrade(tradeLeft.listItens()) and tradeLeft.prepareTrade(tradeRight.listItens()):
-                tradeLeft.commitTrade(db)
-                tradeRight.commitTrade(db)
-                return True
-            else:
-                raise ValueError('Give more itens than have')
+        trade = data['trade']
+        tradeLeft = db.searchById(trade[0]['id'])
+        itensLeft = assignContent(trade[0]['itens'])
+        tradeRight = db.searchById(trade[1]['id'])
+        itensRight = assignContent(trade[1]['itens'])
+        print tradeLeft.canGiveItens(itensLeft)
+        print tradeRight.canGiveItens(itensRight)
+        print equalPoints(itensLeft,itensRight)
+        if tradeLeft.canGiveItens(itensLeft) and tradeRight.canGiveItens(itensRight) and equalPoints(itensLeft,itensRight):
+            db.updateById(tradeLeft.getId(), 'inventory', tradeLeft.performTrade(itensLeft,itensRight))
+            db.updateById(tradeRight.getId(), 'inventory', tradeRight.performTrade(itensRight,itensLeft))
+            result = 200
         else:
-            return False
+            result = 422
     else:
-        raise KeyError('Missing key in JSON request')
+        result = 404
+    db.close()
+    return result
+
+def postTrade():
+    try:
+        # try to parse
+        reqData = request.json
+    except:
+        # parse error
+        abort(400)
+    try:
+        # call trade
+        if trade(reqData):
+            return jsonify({'code':0, 'message':'Sucess!', 'tradeRight':reqData['trade'][0]['id'], 'tradeLeft':reqData['trade'][1]['id']}), 200
+        else:
+            return jsonify({'code':1,'message':'Survivor can\'t trade', 'tradeRight':reqData['trade'][0]['id'], 'tradeLeft':reqData['trade'][1]['id']}), 400
+    except (KeyError, ValueError):
+        abort(422)
+    except:
+        abort(404)

@@ -4,9 +4,13 @@ import pymongo
 
 class SurvivorDb:
     db = None
+    connection = None
     def __init__(self,database):
         try:
-            self.db = MongoClient('mongodb://serverv1:adb123@ds029837.mlab.com:29837/heroku_5l2fpwrs').get_default_database()[database]
+            # self.connection = MongoClient('mongodb://serverv1:adb123@ds029837.mlab.com:29837/heroku_5l2fpwrs')
+            # self.db = connection.get_default_database()[database]
+            self.connection = MongoClient()
+            self.db = self.connection.apilipse[database]
             self.db.find({})
         except pymongo.errors.ServerSelectionTimeoutError:
             print "Database is taking too long to responde\nIs it running?\n - ServerSelectionTimeoutError"
@@ -91,3 +95,5 @@ class SurvivorDb:
             return self.updateById(_id,'infectionReports',self.searchById(_id).infectionReports + 1).modified_count
         except:
             return -1
+    def close(self):
+        self.connection.close()

@@ -21,5 +21,5 @@
 {"_id": 19, "name":"Caiqueson", "age": 28, "gender":"M", "lastLocation":{"x":31654.3,"y":32164.3}, "inventory":{"water": 7, "food": 2,"medication": 4,"ammunition": 100}, "infectionReports":0}
 {"_id": 23, "name":"Dona Benta", "age": 78, "gender":"F", "lastLocation":{"x":6548.6,"y":654986.6}, "inventory":{"water": 10, "food": 4,"medication": 5,"ammunition": 154}, "infectionReports":1}
 {"_id": 20, "name":"Felipson", "age": 20, "gender":"M", "lastLocation":{"x":15784.545,"y":456464.6}, "inventory":{"water": 3, "food": 13,"medication": 2,"ammunition": 125}, "infectionReports":0}
-{"_id": 12, "name":"Pablito", "age": 38, "gender":"M", "lastLocation":{"x":215485.5,"y":35468.9}, "inventory":{"water": 20, "food": 13,"medication": 33,"ammunition": 83}, "infectionReports":2}
+{"_id": 12, "name":"Pablito", "age": 38, "gender":"M", "lastLocation":{"x":215485.5,"y":35468.9}, "inventory":{"water": 20, "food": 13,"medication": 33,"ammunition": 83}, "infectionReports":0}
 {"_id": 24, "name":"Trump", "age": 70, "gender":"M", "lastLocation":{"x":65275.55,"y":4654.4}, "inventory":{"water": 14, "food": 15,"medication": 11,"ammunition": 70}, "infectionReports":0}

@@ -2,9 +2,10 @@
 from flask import Flask,jsonify,abort,make_response,request
 import sys
 sys.path.append('modules')
+sys.path.append('controllers')
 from survivor import Survivor
 from survivorDb import SurvivorDb
-# from trade import trade
+from trade import postTrade
 from report import reports
 import os
 import json
@@ -87,22 +88,6 @@ def reportInfected():
 # post a trade
 # @app.route('/api/v1/update/trade', methods=['PUT'])
 # def postTrade():
-#     try:
-#         # try to parse
-#         reqData = request.json
-#     except:
-#         # parse error
-#         abort(400)
-#     try:
-#         # call trade
-#         if trade(reqData):
-#             return jsonify({'code':0, 'message':'Sucess!', 'tradeRight':reqData['trade'][0]['id'], 'tradeLeft':reqData['trade'][1]['id']}), 200
-#         else:
-#             return jsonify({'code':1,'message':'Survivor can\'t trade', 'tradeRight':reqData['trade'][0]['id'], 'tradeLeft':reqData['trade'][1]['id']}), 400
-#     except (KeyError, ValueError):
-#         abort(422)
-#     except:
-#         abort(404)
 
 @app.errorhandler(404)
 def not_found(error):

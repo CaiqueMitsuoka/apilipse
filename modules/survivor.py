@@ -63,12 +63,15 @@ class Survivor:
 
     def canGiveItens(self, givingItens):
         if self.canTrade():
-            if (givingItens[0] <= self.water) and (givingItens[1] <= self.food) and (givingItens[2] <= self.medication) and (givingItens[3] <= self.ammunition):
+            # giving more than his have
+            if (givingItens['water'] <= self.water) and (givingItens['food'] <= self.food) and (givingItens['medication'] <= self.medication) and (givingItens['ammunition'] <= self.ammunition):
                 return True
         return False
 
     def setId(self,_id):
         self._id = _id
+    def getId(self):
+        return self._id
     def getName(self):
         return self.name
     def getAge(self):
@@ -89,4 +92,11 @@ class Survivor:
         return self.ammunition
 
     def getListInventory(self):
-        return [self.getWater(),self.getFood(),self.getMedication(),self.getAmmunition()]
+        return {'water':self.getWater(),'food':self.getFood(),'medication':self.getMedication(),'ammunition':self.getAmmunition()}
+
+    def performTrade(self, give, receive):
+        self.water = self.water - give['water'] + receive['water']
+        self.food = self.food - give['food'] + receive['food']
+        self.medication = self.medication - give['medication'] + receive['medication']
+        self.ammunition = self.ammunition - give['ammunition'] + receive['ammunition']
+        return self.getListInventory()
