@@ -1,17 +1,17 @@
 # -*- coding: <UTF-8> -*-
 from flask import Flask,jsonify,abort,make_response,request
-import sys
-sys.path.append('modules')
-sys.path.append('controllers')
-from survivor import Survivor
-from survivorDb import SurvivorDb
-from trade import postTrade
-from report import reports
-import os
+import sys,os
 import json
-
+# sys.path.append('modules')
+# sys.path.append('controllers')
+# sys.path.append(os.path.abspath('..'))
+# print sys.path
+from .survivor import Survivor
+from .survivor import SurvivorDb
 # instanciate flask and connect database
 app = Flask(__name__)
+
+# print 'eaeae'
 
 @app.route('/', methods=['GET'])
 def version():
@@ -35,12 +35,12 @@ def getSurvivorById(survivor_id):
     if survivor == None:
         abort(404)
     return make_response(jsonify(survivor.survivorToDic()),200)
-
-# get reports
-@app.route('/api/v1/reports', methods=['GET'])
-def getReports():
-    return jsonify(reports()), 200
-
+#
+# # get reports
+# @app.route('/api/v1/reports', methods=['GET'])
+# def getReports():
+#     return jsonify(reports()), 200
+#
 # post update location
 @app.route('/api/v1/update/location', methods=['PUT'])
 def updateLocation():
@@ -84,11 +84,11 @@ def reportInfected():
         return jsonify({'reported':result})
     # database error
     abort(500)
-
-# post a trade
-# @app.route('/api/v1/update/trade', methods=['PUT'])
-# def postTrade():
-
+#
+# # post a trade
+# # @app.route('/api/v1/update/trade', methods=['PUT'])
+# # def postTrade():
+#
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
@@ -113,10 +113,4 @@ def jsonToSuvivor(s):
         survivorDic['infectionReports']
     )
 
-
-
-if __name__ == '__main__':
-    db = SurvivorDb('survivors')
-
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0',port=port,debug=True)
+db = SurvivorDb('survivors')

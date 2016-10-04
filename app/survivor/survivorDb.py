@@ -7,7 +7,7 @@ class SurvivorDb:
     connection = None
     def __init__(self,database):
         try:
-            # self.connection = MongoClient('mongodb://serverv1:adb123@ds029837.mlab.com:29837/heroku_5l2fpwrs')
+            # self.connection = MongoClient(DATABASE_URI)
             # self.db = connection.get_default_database()[database]
             self.connection = MongoClient()
             self.db = self.connection.apilipse[database]
