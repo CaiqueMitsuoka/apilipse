@@ -4,10 +4,11 @@ import requests
 import json
 import pdb
 import random
-sys.path.append('modules')
-from survivor import Survivor
-from survivorDb import SurvivorDb
-from trade import assignContent, verifyIntegrity, trade
+
+from app.survivor import Survivor
+from app.survivor import SurvivorDb
+from app.trade.trade import verifyIntegrity, assignContent, trade
+
 
 # uri = 'https://apilipse.herokuapp.com/api/v1/'
 uri = 'http://localhost:5000/api/v1/'
@@ -74,8 +75,50 @@ class TestTrade(unittest.TestCase):
         self.assertFalse(verifyIntegrity({}))
 
     def test_trade(self):
-        self.assertEqual(200,trade({'trade':[{'id':12,'itens':{'water':3}},{'id':24,'itens':{'food':2,'medication':2,'ammunition':2}}]}))
-        self.assertEqual(200,trade({'trade':[{'id':24,'itens':{'water':3}},{'id':12,'itens':{'food':2,'medication':2,'ammunition':2}}]}))
+        self.assertEqual(200,trade(
+            {
+                'trade':[
+                    {
+                        'id':12,
+                        'itens':
+                            {
+                                'water':3
+                            }
+                    },
+                    {
+                        'id':24,
+                        'itens':
+                            {
+                                'food':2,
+                                'medication':2,
+                                'ammunition':2
+                            }
+                    }
+                ]
+            }
+        ))
+        self.assertEqual(200,trade(
+            {
+                'trade':[
+                    {
+                        'id':24,
+                        'itens':
+                            {
+                                'water':3
+                            }
+                    },
+                    {
+                        'id':12,
+                        'itens':
+                            {
+                                'food':2,
+                                'medication':2,
+                                'ammunition':2
+                            }
+                    }
+                ]
+            }
+        ))
 
 
 class TestApp(unittest.TestCase):
@@ -211,18 +254,18 @@ class TestApp(unittest.TestCase):
 
     def apiResports(self):
         response_cod = requests.get(uri + '/reports').status_code
-        self.assertEqual(200,response_cod)
+        self.assertEqual(200, response_cod)
 
 
 def postRequest(route, data):
     response = requests.post(uri + route,data=json.dumps(data),headers={'Content-Type':'application/json'})
     # print response
     # print response.json()
-    return (response.json(), response.status_code)
+    return response.json(), response.status_code
 
 def putRequest(route, data):
     response = requests.put(uri + route,data=json.dumps(data),headers={'Content-Type':'application/json'})
-    return (response.json(), response.status_code)
+    return response.json(), response.status_code
 
 if __name__ == '__main__':
     db = SurvivorDb('survivors')

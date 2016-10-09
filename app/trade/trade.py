@@ -1,5 +1,5 @@
-from survivor import Survivor
-from survivorDb import SurvivorDb
+from app.survivor import SurvivorDb
+
 
 def assignContent(itens):
     typeItens = ['water','food','medication','ammunition']
@@ -28,6 +28,7 @@ def equalPoints(itensLeft,itensRight):
     return False
 
 def trade(data):
+    data = data['trade']
     if verifyIntegrity(data):
         db = SurvivorDb('survivors')
         trade = data['trade']
@@ -35,34 +36,13 @@ def trade(data):
         itensLeft = assignContent(trade[0]['itens'])
         tradeRight = db.searchById(trade[1]['id'])
         itensRight = assignContent(trade[1]['itens'])
-        print tradeLeft.canGiveItens(itensLeft)
-        print tradeRight.canGiveItens(itensRight)
-        print equalPoints(itensLeft,itensRight)
         if tradeLeft.canGiveItens(itensLeft) and tradeRight.canGiveItens(itensRight) and equalPoints(itensLeft,itensRight):
             db.updateById(tradeLeft.getId(), 'inventory', tradeLeft.performTrade(itensLeft,itensRight))
             db.updateById(tradeRight.getId(), 'inventory', tradeRight.performTrade(itensRight,itensLeft))
-            result = 200
+            result = (tradeLeft.survivorToDic() , 200)
         else:
             result = 422
+        db.close()
     else:
         result = 404
-    db.close()
     return result
-
-def postTrade():
-    try:
-        # try to parse
-        reqData = request.json
-    except:
-        # parse error
-        abort(400)
-    try:
-        # call trade
-        if trade(reqData):
-            return jsonify({'code':0, 'message':'Sucess!', 'tradeRight':reqData['trade'][0]['id'], 'tradeLeft':reqData['trade'][1]['id']}), 200
-        else:
-            return jsonify({'code':1,'message':'Survivor can\'t trade', 'tradeRight':reqData['trade'][0]['id'], 'tradeLeft':reqData['trade'][1]['id']}), 400
-    except (KeyError, ValueError):
-        abort(422)
-    except:
-        abort(404)

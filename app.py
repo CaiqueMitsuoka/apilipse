@@ -1,4 +1,4 @@
-import app,os
+import os
 from app import getApp
 port = int(os.environ.get('PORT', 5000))
 app = getApp()
