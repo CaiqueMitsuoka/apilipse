@@ -14,20 +14,16 @@ from app.trade.trade import verifyIntegrity, assignContent, trade
 uri = 'http://localhost:5000/api/v1/'
 
 class TestSurvivorClass(unittest.TestCase):
-    def test_init(self):
-        survivorTest = Survivor(1,{'name':'paranaue','age': 21,'gender': 'M','lastLocation':{'x': 15484.3,'y': 22548.1},'inventory': {'water':1,'food':2,'medication':1,'ammunition': 20}})
-        self.assertEqual(survivorTest.name , 'paranaue')
-        self.assertEqual(survivorTest.getAge() , 21)
-        self.assertEqual(survivorTest.getGender() , 'M')
-        self.assertEqual(survivorTest.getLastLocationX() , 15484.3)
-        self.assertEqual(survivorTest.getLastLocationY() , 22548.1)
-        self.assertEqual(survivorTest.getWater() , 1)
-        self.assertEqual(survivorTest.getFood() , 2)
-        self.assertEqual(survivorTest.getMedication() , 1)
-        self.assertEqual(survivorTest.getAmmunition() , 20)
-        self.assertEqual(survivorTest.infectionReports, 0)
-        self.assertTrue(survivorTest.canTrade())
-        self.assertEqual(survivorTest.survivorToDic(), {
+    inventory = {
+        'water':1,
+        'food':2,
+        'medication':1,
+        'ammunition': 20
+    }
+    survivorTest = Survivor(1,'paranaue', 21,'M', 15484.3, 22548.1,inventory)
+
+    def test_survivorToDic(self):
+        dict_expected_from_default_survivor = {
             "id": 1,
             "name": "paranaue",
             "path": "/survivors/1",
@@ -45,38 +41,56 @@ class TestSurvivorClass(unittest.TestCase):
                 "medication": 1,
                 "ammunition": 20
             }
-        })
+        }
+        self.assertEqual(self.survivorTest.survivorToDic(), dict_expected_from_default_survivor)
 
     def test_canGiveItens(self):
-        survivorTest = Survivor(1,{'name':'paranaue','age': 21,'gender': 'M','lastLocation':{'x': 15484.3,'y': 22548.1},'inventory': {'water':1,'food':2,'medication':1,'ammunition': 20}})
-        self.assertTrue(survivorTest.canGiveItens({'water':1,'food':2,'medication':1,'ammunition':20}))
-        self.assertFalse(survivorTest.canGiveItens({'water':2,'food':2,'medication':1,'ammunition':20}))
-        self.assertFalse(survivorTest.canGiveItens({'water':1,'food':3,'medication':1,'ammunition':20}))
-        self.assertFalse(survivorTest.canGiveItens({'water':1,'food':2,'medication':2,'ammunition':20}))
-        self.assertFalse(survivorTest.canGiveItens({'water':1,'food':2,'medication':1,'ammunition':21}))
-        self.assertTrue(survivorTest.canGiveItens({'water':0,'food':0,'medication':0,'ammunition':0}))
+        self.assertTrue(self.survivorTest.canGiveItens(self.inventory))
+
+    def test_canGiveItensWaterWrong(self):
+        inventory_with_more_water = {'water':2,'food':2,'medication':1,'ammunition':20}
+        self.assertFalse(self.survivorTest.canGiveItens(inventory_with_more_water))
+
+    def test_canGiveItensFoodWrong(self):
+        inventory_with_more_food = {'water': 1, 'food': 3, 'medication': 1, 'ammunition': 20}
+        self.assertFalse(self.survivorTest.canGiveItens(inventory_with_more_food))
+
+    def test_canGiveItensMedicationWrong(self):
+        inventory_with_more_medication = {'water': 1, 'food': 2, 'medication': 2, 'ammunition': 20}
+        self.assertFalse(self.survivorTest.canGiveItens(inventory_with_more_medication))
+
+    def test_canGiveItensAmmunitionWrong(self):
+        inventory_with_more_ammunition = {'water': 1, 'food': 2, 'medication': 1, 'ammunition': 21}
+        self.assertFalse(self.survivorTest.canGiveItens(inventory_with_more_ammunition))
+
+    def test_canGiveZeroItens(self):
+        inventory_with_no_itens = {'water': 0, 'food': 0, 'medication': 0, 'ammunition': 0}
+        self.assertTrue(self.survivorTest.canGiveItens(inventory_with_no_itens))
 
 
 
 class TestTrade(unittest.TestCase):
     def test_assignContent(self):
-        self.assertEqual({'water':1,'food':3,'medication':5,'ammunition':2}, assignContent({'water':1,'food':3,'medication':5,'ammunition':2}))
-        self.assertEqual({'water':0,'food':3,'medication':0,'ammunition':0}, assignContent({'food':3}))
-        self.assertEqual({'water':0,'food':0,'medication':1,'ammunition':1}, assignContent({'medication':1,'ammunition':1}))
-        self.assertEqual({'water':0,'food':0,'medication':0,'ammunition':0}, assignContent({}))
+        correct_inventory = {'water':0,'food':0,'medication':5,'ammunition':2}
+        inventory_missing_water_food = {'medication':5,'ammunition':2}
+
+        self.assertEqual(correct_inventory, assignContent(correct_inventory))
+
+        self.assertEqual(correct_inventory, assignContent(inventory_missing_water_food))
+
 
     def test_verifyIntegrity(self):
-        self.assertTrue(verifyIntegrity({'trade':[{'id':0,'itens':{}},{'id':0,'itens':{}}]}))
-        self.assertFalse(verifyIntegrity({'trade':[{'id':0,'itens':{}},{'ideas':0,'itens':{}}]}))
-        self.assertFalse(verifyIntegrity({'trade':[{'id':0,'itens':{}},{'id':0,'itensasd':{}}]}))
-        self.assertFalse(verifyIntegrity({'trade':[{'id':0,'itens':{}},{'id':0}]}))
-        self.assertFalse(verifyIntegrity({'trade':[{'itens':{}},{'id':0,'itens':{}}]}))
-        self.assertFalse(verifyIntegrity({'trade':[]}))
-        self.assertFalse(verifyIntegrity({}))
+        trade_json = {'trade':[{'id':0,'itens':{}},{'id':0,'itens':{}}]}
+        self.assertTrue(verifyIntegrity(trade_json))
+
+        trade_json_wrong_key = {'trade':[{'id':0,'itens':{}},{'ideas':0,'itens':{}}]}
+        self.assertFalse(verifyIntegrity(trade_json_wrong_key))
+
+        trade_json_missing_keys = {'trade':[]}
+        self.assertFalse(verifyIntegrity(trade_json_missing_keys))
 
     def test_trade(self):
-        self.assertEqual(200,trade(
-            {
+        trade_good = {
                 'trade':[
                     {
                         'id':12,
@@ -96,9 +110,7 @@ class TestTrade(unittest.TestCase):
                     }
                 ]
             }
-        ))
-        self.assertEqual(200,trade(
-            {
+        trade_good_reverse = {
                 'trade':[
                     {
                         'id':24,
@@ -118,7 +130,8 @@ class TestTrade(unittest.TestCase):
                     }
                 ]
             }
-        ))
+        self.assertEqual(200,trade(trade_good))
+        self.assertEqual(200,trade(trade_good_reverse))
 
 
 class TestApp(unittest.TestCase):
