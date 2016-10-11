@@ -7,7 +7,7 @@ def get_reports():
     return {
         'reports':
             {
-                SurvivorsReport().report_survivor_quantity(),
-                ItemsReports().items_report()
+                'survivors':SurvivorsReport().report_survivor_quantity(),
+                'items':ItemsReports().items_report()
             }
     }
