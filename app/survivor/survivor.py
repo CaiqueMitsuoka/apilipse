@@ -11,19 +11,8 @@ class Survivor:
         self.age = int(age)
         self.gender = str(gender)
         self.lastLocation = LastLocation(last_location_x,last_location_y)
-        self.setInventory(inventory)
+        self.inventory = Inventory(inventory)
         self.infectionReports = infectRep
-
-    def setInventory(self, invent):
-        self.inventory = Inventory()
-        if 'water' in invent:
-            self.inventory.water = invent['water']
-        if 'food' in invent:
-            self.inventory.food = invent['food']
-        if 'medication' in invent:
-            self.inventory.medication = invent['medication']
-        if 'ammunition' in invent:
-            self.inventory.ammunition = invent['ammunition']
 
     def canTrade(self):
         if self.infectionReports < 3:
@@ -51,22 +40,25 @@ class Survivor:
         }
         return dictSurvivor
 
-    def getTotalPoints(self):
-        return self.inventory.water * 4 + self.inventory.food * 3 + self.inventory.medication * 2 + self.inventory.ammunition
-
     def canGiveItens(self, givingItens):
-        if self.canTrade():
-            # giving more than his have
-            if (givingItens['water'] <= self.inventory.water) and (givingItens['food'] <= self.inventory.food) and (givingItens['medication'] <= self.inventory.medication) and (givingItens['ammunition'] <= self.inventory.ammunition):
-                return True
+        if self.canTrade() and (givingItens.water <= self.inventory.water) and (
+                givingItens.food <= self.inventory.food) and (
+                givingItens.medication <= self.inventory.medication) and (
+                givingItens.ammunition <= self.inventory.ammunition):
+            return True
         return False
 
     def getListInventory(self):
-        return {'water':self.inventory.water,'food':self.inventory.food,'medication':self.inventory.medication,'ammunition':self.inventory.ammunition}
+        return {
+            'water':self.inventory.water,
+            'food':self.inventory.food,
+            'medication':self.inventory.medication,
+            'ammunition':self.inventory.ammunition
+        }
 
     def performTrade(self, give, receive):
-        self.inventory.water = self.inventory.water - give['water'] + receive['water']
-        self.inventory.food = self.inventory.food - give['food'] + receive['food']
-        self.inventory.medication = self.inventory.medication - give['medication'] + receive['medication']
-        self.inventory.ammunition = self.inventory.ammunition - give['ammunition'] + receive['ammunition']
+        self.inventory.water = self.inventory.water - give.water + receive.water
+        self.inventory.food = self.inventory.food - give.food + receive.food
+        self.inventory.medication = self.inventory.medication - give.medication + receive.medication
+        self.inventory.ammunition = self.inventory.ammunition - give.ammunition + receive.ammunition
         return self.getListInventory()

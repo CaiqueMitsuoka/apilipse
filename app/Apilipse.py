@@ -2,7 +2,10 @@
 from flask import Flask,jsonify,abort,make_response,request
 
 import json
+
+from app.trade import TradeManager
 from app.trade import trade
+from app.trade import verifyTradeIntegrity
 from .reports import get_reports
 from .survivor import Survivor
 from .survivor import SurvivorDb
@@ -40,20 +43,16 @@ def getReports():
 # post update location
 @app.route('/api/v1/update/location', methods=['PUT'])
 def updateLocation():
-    # try:
-    result = db.updateLocation(request.json['id'], request.json['lastLocation']['x'], request.json['lastLocation']['y'])
-    print result
-    # except KeyError:
-    #     # key missing
-    #     print 'aqui mesmo'
-    #     abort(422)
-    # except:
-    #     # parse error
-    #     abort(400)
-    if result < 1:
+    try:
+        result = db.updateLocation(request.json['id'], request.json['lastLocation']['x'], request.json['lastLocation']['y'])
+    except KeyError:
+        abort(422)
+    except:
+        abort(400)
+    if result == None:
         # survivor not found
         abort(404)
-    return jsonify({'updatedId':request.json['id']}), 200
+    return jsonify(db.searchById(request.json['id']).survivorToDic()), 200
 
 # post new survivor
 @app.route('/api/v1/survivors', methods=['POST'])
@@ -79,7 +78,10 @@ def reportInfected():
 # post a trade
 @app.route('/api/v1/update/trade', methods=['PUT'])
 def postTrade():
-    return trade(request.json)
+    if verifyTradeIntegrity(request.json):
+        tradeManaged = TradeManager(request.json)
+        return tradeManaged.trade()
+    abort(422)
 
 @app.errorhandler(404)
 def not_found(error):

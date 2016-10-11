@@ -1,1 +1,2 @@
-from trade import trade
+from trade import TradeManager
+from trade import verifyTradeIntegrity

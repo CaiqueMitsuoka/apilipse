@@ -1,4 +1,3 @@
-import sys
 import unittest
 import requests
 import json
@@ -7,8 +6,8 @@ import random
 
 from app.survivor import Survivor
 from app.survivor import SurvivorDb
-from app.trade.trade import verifyIntegrity, assignContent, trade
-
+from app.survivor.inventory import Inventory
+from app.trade.trade import verifyTradeIntegrity, TradeManager
 
 # uri = 'https://apilipse.herokuapp.com/api/v1/'
 uri = 'http://localhost:5000/api/v1/'
@@ -45,93 +44,43 @@ class TestSurvivorClass(unittest.TestCase):
         self.assertEqual(self.survivorTest.survivorToDic(), dict_expected_from_default_survivor)
 
     def test_canGiveItens(self):
-        self.assertTrue(self.survivorTest.canGiveItens(self.inventory))
+        inventory = Inventory(self.inventory)
+        can_give = self.survivorTest.canGiveItens(inventory)
+        self.assertTrue(can_give)
 
     def test_canGiveItensWaterWrong(self):
-        inventory_with_more_water = {'water':2,'food':2,'medication':1,'ammunition':20}
-        self.assertFalse(self.survivorTest.canGiveItens(inventory_with_more_water))
+        inventory_with_more_water = Inventory({'water':2,'food':2,'medication':1,'ammunition':20})
+        can_give = self.survivorTest.canGiveItens(inventory_with_more_water)
+        self.assertFalse(can_give)
 
-    def test_canGiveItensFoodWrong(self):
-        inventory_with_more_food = {'water': 1, 'food': 3, 'medication': 1, 'ammunition': 20}
-        self.assertFalse(self.survivorTest.canGiveItens(inventory_with_more_food))
-
-    def test_canGiveItensMedicationWrong(self):
-        inventory_with_more_medication = {'water': 1, 'food': 2, 'medication': 2, 'ammunition': 20}
-        self.assertFalse(self.survivorTest.canGiveItens(inventory_with_more_medication))
-
-    def test_canGiveItensAmmunitionWrong(self):
-        inventory_with_more_ammunition = {'water': 1, 'food': 2, 'medication': 1, 'ammunition': 21}
-        self.assertFalse(self.survivorTest.canGiveItens(inventory_with_more_ammunition))
 
     def test_canGiveZeroItens(self):
-        inventory_with_no_itens = {'water': 0, 'food': 0, 'medication': 0, 'ammunition': 0}
-        self.assertTrue(self.survivorTest.canGiveItens(inventory_with_no_itens))
+        inventory_with_no_itens = Inventory({'water': 0, 'food': 0, 'medication': 0, 'ammunition': 0})
+        can_give = self.survivorTest.canGiveItens(inventory_with_no_itens)
+        self.assertTrue(can_give)
 
 
 
 class TestTrade(unittest.TestCase):
-    def test_assignContent(self):
-        correct_inventory = {'water':0,'food':0,'medication':5,'ammunition':2}
-        inventory_missing_water_food = {'medication':5,'ammunition':2}
+    trade_json = {'trade': [{'id': 0, 'itens': {'water':2}}, {'id': 0, 'itens': {'food':2,'medication':2}}]}
+    def test_calc(self):
+        tradeM = TradeManager(self.trade_json)
 
-        self.assertEqual(correct_inventory, assignContent(correct_inventory))
+        n_points = tradeM.calcPoints(tradeM.items_left)
 
-        self.assertEqual(correct_inventory, assignContent(inventory_missing_water_food))
+        self.assertEqual(8,n_points)
 
+    def test_verifyTradeIntegrity(self):
 
-    def test_verifyIntegrity(self):
-        trade_json = {'trade':[{'id':0,'itens':{}},{'id':0,'itens':{}}]}
-        self.assertTrue(verifyIntegrity(trade_json))
+        self.assertTrue(verifyTradeIntegrity(self.trade_json))
 
         trade_json_wrong_key = {'trade':[{'id':0,'itens':{}},{'ideas':0,'itens':{}}]}
-        self.assertFalse(verifyIntegrity(trade_json_wrong_key))
+        self.assertFalse(verifyTradeIntegrity(trade_json_wrong_key))
 
         trade_json_missing_keys = {'trade':[]}
-        self.assertFalse(verifyIntegrity(trade_json_missing_keys))
+        self.assertFalse(verifyTradeIntegrity(trade_json_missing_keys))
 
-    def test_trade(self):
-        trade_good = {
-                'trade':[
-                    {
-                        'id':12,
-                        'itens':
-                            {
-                                'water':3
-                            }
-                    },
-                    {
-                        'id':24,
-                        'itens':
-                            {
-                                'food':2,
-                                'medication':2,
-                                'ammunition':2
-                            }
-                    }
-                ]
-            }
-        trade_good_reverse = {
-                'trade':[
-                    {
-                        'id':24,
-                        'itens':
-                            {
-                                'water':3
-                            }
-                    },
-                    {
-                        'id':12,
-                        'itens':
-                            {
-                                'food':2,
-                                'medication':2,
-                                'ammunition':2
-                            }
-                    }
-                ]
-            }
-        self.assertEqual(200,trade(trade_good))
-        self.assertEqual(200,trade(trade_good_reverse))
+#     TradeManager.trade() works only under a Flask.app context, so the tests os it is in TestApp
 
 
 class TestApp(unittest.TestCase):
@@ -159,71 +108,59 @@ class TestApp(unittest.TestCase):
         self.assertEqual(response[1],200)
 
     def test_apiTrade(self):
-        response = putRequest('update/trade',{"trade":
+        valid_trade = {
+            "trade":
             [
                 {
-                    "id":4,
-                    "itens":{
-                        "water":1,
-                        "food":2
+                    "id": 12,
+                    "itens": {
+                        "water": 2,
+                        "food": 1,
+                        "medication": 3,
+                        "ammunition": 3
                     }
                 },
                 {
-                    "id":2,
-                    "itens":{
-                        "medication":2,
-                        "ammunition":6
+                    "id": 24,
+                    "itens": {
+                        "water": 3,
+                        "food": 1,
+                        "medication": 1,
+                        "ammunition": 3
                     }
                 }
             ]
-        })
+        }
+        response = putRequest('update/trade',valid_trade)
         self.assertEqual(response[1],200)
-        # same trade, but oposite, for persistance of the test
-        response = putRequest('update/trade',{"trade":
-            [
-                {
-                    "id":2,
-                    "itens":{
-                        "water":1,
-                        "food":2
+        valid_trade = {
+            "trade":
+                [
+                    {
+                        "id": 24,
+                        "itens": {
+                            "water": 2,
+                            "food": 1,
+                            "medication": 3,
+                            "ammunition": 3
+                        }
+                    },
+                    {
+                        "id": 12,
+                        "itens": {
+                            "water": 3,
+                            "food": 1,
+                            "medication": 1,
+                            "ammunition": 3
+                        }
                     }
-                },
-                {
-                    "id":4,
-                    "itens":{
-                        "medication":2,
-                        "ammunition":6
-                    }
-                }
-            ]
-        })
-        self.assertEqual(response[1],200)
-
-        response = putRequest('update/trade',{"trade":
-            [
-                {
-                    "id":12,
-                    "itens":{
-                        "water":2,
-                        "food":1,
-                        "medication":3,
-                        "ammunition":3
-                    }
-                },
-                {
-                    "id":18,
-                    "itens":{
-                        "water":3,
-                        "food":1,
-                        "medication":1,
-                        "ammunition":3
-                    }
-                }
-            ]
-        })
-        self.assertEqual(response[1],400)
-
-        response = putRequest('update/trade',{"trade":
+                ]
+        }
+        response = putRequest('update/trade', valid_trade)
+        self.assertEqual(response[1], 200)
+    def test_apiTradeErrors(self):
+        trade_json_wrong_key = {
+            "trade":
             [
                 { #id misspelled
                     "di":6,
@@ -240,8 +177,79 @@ class TestApp(unittest.TestCase):
                     }
                 }
             ]
-        })
-        self.assertEqual(response[1],422)
+        }
+
+        trade_json_unknown_id = {
+            "trade":
+            [
+                {
+                    "id": 99999999999,
+                    "itens": {
+                        "water": 1,
+                        "food": 2
+                    }
+                },
+                {
+                    "id": 2,
+                    "itens": {
+                        "medication": 2,
+                        "ammunition": 6
+                    }
+                }
+            ]
+        }
+
+        trade_json_wrong_points = {
+            "trade":
+            [
+                {
+                    "id": 6,
+                    "itens": {
+                        "water": 1,
+                        "food": 6
+                    }
+                },
+                {
+                    "id": 2,
+                    "itens": {
+                        "medication": 2,
+                        "ammunition": 6
+                    }
+                }
+            ]
+        }
+
+        trade_json_wrong_quantity = {
+            "trade":
+                [
+                    {
+                        "id": 6,
+                        "itens": {
+                            "water": 999,
+                            "food": 6
+                        }
+                    },
+                    {
+                        "id": 2,
+                        "itens": {
+                            "medication": 2,
+                            "ammunition": 6
+                        }
+                    }
+                ]
+        }
+
+        response = putRequest('update/trade', trade_json_wrong_quantity)[1]
+        self.assertEqual(response, 409)
+
+        response = putRequest('update/trade', trade_json_wrong_points)[1]
+        self.assertEqual(response, 409)
+
+        response = putRequest('update/trade',trade_json_wrong_key)[1]
+        self.assertEqual(response,422)
+
+        response = putRequest('update/trade', trade_json_unknown_id)[1]
+        self.assertEqual(response, 404)
 
     def test_apiReportInfected(self):
         # check if survivor can trade

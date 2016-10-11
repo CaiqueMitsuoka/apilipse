@@ -64,10 +64,10 @@ class SurvivorDb:
         return objSurvivor
 
     def updateById(self, _id, field, value):
-        # try:
-        return self.db.update_one({'_id': _id},{"$set":{field: value}})
-        # except:
-        #     return None
+        try:
+            return self.db.update_one({'_id': _id},{"$set":{field: value}})
+        except:
+            return None
 
     def canTrade(self, _id):
         if self.searchById(_id).infectionReports < 3:
@@ -85,12 +85,12 @@ class SurvivorDb:
         return self.db.find_one(sort=[("_id", -1)])['_id']
 
     def updateLocation(self, _id, lat, lon):
-        # try:
-        return self.updateById(_id,'lastLocation',{'x':lat,'y':lon})
+        try:
+            return self.updateById(_id,'lastLocation',{'x':lat,'y':lon})
             # self.updateById(_id,'lastLocation.x',lat)
             # self.updateById(_id,'lastLocation.y',lon)
-        # except:
-        #     return None
+        except:
+            return None
 
     def reportInfection(self,_id):
         try:
