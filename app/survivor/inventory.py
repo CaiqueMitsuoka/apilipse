@@ -1,6 +1,9 @@
 # -*- coding: <UTF-8> -*-
+from app.trade.points import Points
+
+
 class Inventory:
-    def __init__(self, inventory_json):
+    def __init__(self, inventory_json = {}):
         self.water = 0
         self.food = 0
         self.medication = 0
@@ -13,3 +16,6 @@ class Inventory:
             self.medication = inventory_json['medication']
         if 'ammunition' in inventory_json:
             self.ammunition = inventory_json['ammunition']
+
+    def calcPoints(self):
+        return Points().totalPoints(self)

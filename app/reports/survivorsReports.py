@@ -1,33 +1,42 @@
-import sys, os
-
 from app.survivor import SurvivorDb
 
-sys.path.append(os.path.abspath('..'))
 
+class SurvivorsReport:
+    def getAllSurvivors(self):
 
-def report_survivor_quantity():
-    db = SurvivorDb('survivors')
-    # get all survivors
-    list_all_survivors = db.getAllSurvivors()
-    # count healthy survivors
-    healthy = 0
+        db = SurvivorDb('survivors')
+        listAllSurvivors = db.getAllSurvivors()
+        db.close()
+        return listAllSurvivors
 
-    for survivor in list_all_survivors:
-        # is infected?
-        if survivor.canTrade():
-            healthy += 1
+    def report_survivor_quantity(self):
+        list_all_survivors = self.getAllSurvivors()
 
-    percentage_non_infected = (healthy * 100) / len(list_all_survivors)
-    percentage_infected = 100 - percentage_non_infected
-    db.close()
-    return {
-        'Total': len(list_all_survivors),
-        'percentage': {
-            'infected': percentage_infected,
-            'nonInfected': percentage_non_infected
-        },
-        'absolute': {
-            'infected': len(list_all_survivors) - healthy,
-            'nonInfected': healthy
+        healthy = 0
+
+        for survivor in list_all_survivors:
+            # is infected?
+            if survivor.canTrade():
+                healthy += 1
+
+        total_survivors = len(list_all_survivors)
+
+        percentage_non_infected = (healthy * 100) / len(list_all_survivors)
+
+        percentage_infected = 100 - percentage_non_infected
+
+        return {
+            'survivors':
+            {
+                'Total': total_survivors,
+                'percentage': {
+                    'infected': percentage_infected,
+                    'nonInfected': percentage_non_infected
+                },
+                'absolute': {
+                    'infected': total_survivors - healthy,
+                    'nonInfected': healthy
+                }
+            }
         }
-    }
+
