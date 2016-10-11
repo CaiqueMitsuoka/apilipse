@@ -1,14 +1,16 @@
 from pymongo import MongoClient
+
+from config import DATABASE_URI
 from survivor import Survivor
 import pymongo
 
 class SurvivorDb:
     def __init__(self,database):
         try:
-            # self.connection = MongoClient(DATABASE_URI)
-            # self.db = connection.get_default_database()[database]
-            self.connection = MongoClient()
-            self.db = self.connection.apilipse[database]
+            self.connection = MongoClient(DATABASE_URI)
+            self.db = self.connection.get_default_database()[database]
+            # self.connection = MongoClient()
+            # self.db = self.connection.apilipse[database]
             self.db.find({})
         except pymongo.errors.ServerSelectionTimeoutError:
             print "Database is taking too long to responde\nIs it running?\n - ServerSelectionTimeoutError"

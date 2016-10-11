@@ -5,6 +5,7 @@ import json
 
 from app.trade import TradeManager
 from app.trade import verifyTradeIntegrity
+from config import VERSION_STRING, VERSION
 from .reports import get_reports
 from .survivor import SurvivorDb
 
@@ -14,11 +15,11 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def version():
-    return jsonify({'Apilipse':'Api for the best zombie social network, always with you <3','version':'1.0'})
+    return jsonify({'Apilipse':'Api for the best zombie social network, always with you <3','version': VERSION})
 
 
 
-@app.route('/api/v1/survivors', methods=['GET'])
+@app.route('/api/%s/survivors' %(VERSION_STRING), methods=['GET'])
 def get_all_survivors():
     db = SurvivorDb('survivors')
 
@@ -37,7 +38,7 @@ def get_all_survivors():
 
 
 
-@app.route('/api/v1/survivors/<int:survivor_id>', methods=['GET'])
+@app.route('/api/%s/survivors/<int:survivor_id>' %(VERSION_STRING), methods=['GET'])
 def getSurvivorById(survivor_id):
     db = SurvivorDb('survivors')
 
@@ -51,13 +52,13 @@ def getSurvivorById(survivor_id):
 
 
 
-@app.route('/api/v1/reports', methods=['GET'])
+@app.route('/api/%s/reports' %(VERSION_STRING), methods=['GET'])
 def getReports():
     return jsonify(get_reports()), 200
 
 
 
-@app.route('/api/v1/update/location', methods=['PUT'])
+@app.route('/api/%s/update/location' %(VERSION_STRING), methods=['PUT'])
 def updateLocation():
 
     db = SurvivorDb('survivors')
@@ -72,7 +73,7 @@ def updateLocation():
 
 
 
-@app.route('/api/v1/survivors', methods=['POST'])
+@app.route('/api/%s/survivors' %(VERSION_STRING), methods=['POST'])
 def postNewSurvivor():
 
     db = SurvivorDb('survivors')
@@ -84,7 +85,7 @@ def postNewSurvivor():
 
     return jsonify(new_survivor.survivorToDic()), 201
 
-@app.route('/api/v1/update/infected', methods=['PUT'])
+@app.route('/api/%s/update/infected' %(VERSION_STRING), methods=['PUT'])
 def reportInfected():
     try:
         _id = request.json['id']
@@ -105,7 +106,7 @@ def reportInfected():
 
 
 
-@app.route('/api/v1/update/trade', methods=['PUT'])
+@app.route('/api/%s/update/trade' %(VERSION_STRING), methods=['PUT'])
 def postTrade():
 
     if verifyTradeIntegrity(request.json):
@@ -113,6 +114,9 @@ def postTrade():
         return tradeManaged.trade()
 
     abort(422)
+
+
+
 
 @app.errorhandler(404)
 def not_found(error):

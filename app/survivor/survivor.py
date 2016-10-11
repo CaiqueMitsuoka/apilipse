@@ -2,6 +2,7 @@
 
 from app.survivor.inventory import Inventory
 from app.survivor.lastLocation import LastLocation
+from config import API_URI, VERSION_STRING
 
 
 class Survivor:
@@ -21,7 +22,7 @@ class Survivor:
 
     def survivorToDic(self):
         dictSurvivor = {"id":self._id
-            , "path": '/survivors/' + str(self._id)
+            , "path": API_URI + '/api/' + VERSION_STRING + '/survivors/' + str(self._id)
             , "name": self.name
             , "age": self.age
             , "gender": self.gender
