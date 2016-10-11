@@ -9,8 +9,8 @@ from app.survivor import SurvivorDb
 from app.survivor.inventory import Inventory
 from app.trade.trade import verifyTradeIntegrity, TradeManager
 
-# uri = 'https://apilipse.herokuapp.com/api/v1/'
-uri = 'http://localhost:5000/api/v1/'
+uriHeroku = 'http://apilipse.herokuapp.com/api/v1.1/'
+uri = 'http://localhost:5000/api/v1.1/'
 
 class TestSurvivorClass(unittest.TestCase):
     inventory = {
@@ -25,7 +25,7 @@ class TestSurvivorClass(unittest.TestCase):
         dict_expected_from_default_survivor = {
             "id": 1,
             "name": "paranaue",
-            "path": "/survivors/1",
+            "path": uriHeroku + "survivors/1",
             "age": 21,
             "gender": "M",
             "canTrade": True,
