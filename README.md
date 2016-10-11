@@ -30,17 +30,14 @@ Populate with a test database:
 `$ mongoimport --db apilipse --collection survivors --drop --file survivors.json
 `
 
-`$ ./setup.sh
-`
-
-If necessary give execution permition to the file
-
-`$ chmod +x setup.sh
-`
+#####
 
 ##### Launch server and database:
 
-`$ ./init.sh
+`$ sudo service mongod start
+`
+
+`$ python app.py
 `
 
 ##### Test:

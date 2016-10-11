@@ -4,11 +4,11 @@ from flask import Flask,jsonify,abort,make_response,request
 import json
 
 from app.trade import TradeManager
-from app.trade import trade
 from app.trade import verifyTradeIntegrity
 from .reports import get_reports
-from .survivor import Survivor
 from .survivor import SurvivorDb
+
+
 # instanciate flask and connect database
 app = Flask(__name__)
 
@@ -16,71 +16,102 @@ app = Flask(__name__)
 def version():
     return jsonify({'Apilipse':'Api for the best zombie social network, always with you <3','version':'1.0'})
 
-# get all the survivors
+
+
 @app.route('/api/v1/survivors', methods=['GET'])
 def get_all_survivors():
+    db = SurvivorDb('survivors')
+
     listSurv = db.getAllSurvivors()
+
+    db.close()
+
     if len(listSurv) == 0:
         abort(404)
+
     survivorList = []
     for people in listSurv:
         survivorList.append(people.survivorToDic())
+
     return jsonify({'Suvivors':survivorList}), 200
 
-# get survivor by id
+
+
 @app.route('/api/v1/survivors/<int:survivor_id>', methods=['GET'])
 def getSurvivorById(survivor_id):
+    db = SurvivorDb('survivors')
+
     survivor = db.searchById(survivor_id)
+    db.close()
+
     if survivor == None:
         abort(404)
+
     return make_response(jsonify(survivor.survivorToDic()),200)
 
-# get reports
+
+
 @app.route('/api/v1/reports', methods=['GET'])
 def getReports():
     return jsonify(get_reports()), 200
 
-# post update location
+
+
 @app.route('/api/v1/update/location', methods=['PUT'])
 def updateLocation():
-    try:
-        result = db.updateLocation(request.json['id'], request.json['lastLocation']['x'], request.json['lastLocation']['y'])
-    except KeyError:
-        abort(422)
-    except:
-        abort(400)
+
+    db = SurvivorDb('survivors')
+    result = db.updateLocation(request.json['id'], request.json['lastLocation']['x'], request.json['lastLocation']['y'])
+    db.close()
+
     if result == None:
         # survivor not found
         abort(404)
+
     return jsonify(db.searchById(request.json['id']).survivorToDic()), 200
 
-# post new survivor
+
+
 @app.route('/api/v1/survivors', methods=['POST'])
 def postNewSurvivor():
+
+    db = SurvivorDb('survivors')
     new_survivor = db.insertSurvivor(request.json)
+    db.close()
+
     if new_survivor == None:
         abort(422)
+
     return jsonify(new_survivor.survivorToDic()), 201
 
 @app.route('/api/v1/update/infected', methods=['PUT'])
 def reportInfected():
     try:
         _id = request.json['id']
+
     except:
         # parse error
         abort(400)
+
+    db = SurvivorDb('survivors')
     result = db.reportInfection(_id)
+    db.close()
+
     if result > 0:
         return jsonify({'reported':result})
+
     # database error
     abort(500)
 
-# post a trade
+
+
 @app.route('/api/v1/update/trade', methods=['PUT'])
 def postTrade():
+
     if verifyTradeIntegrity(request.json):
         tradeManaged = TradeManager(request.json)
         return tradeManaged.trade()
+
     abort(422)
 
 @app.errorhandler(404)
@@ -99,12 +130,3 @@ def coulnt_parse(error):
 def coulnt_parse(error):
     return make_response(jsonify({'error': 'Internal error'}), 500)
 
-def jsonToSuvivor(s):
-    survivorDic = json.loads(s)
-    return Survivor(
-        survivorDic['id'],
-        survivorDic,
-        survivorDic['infectionReports']
-    )
-
-db = SurvivorDb('survivors')
