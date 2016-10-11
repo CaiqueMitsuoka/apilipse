@@ -11,7 +11,7 @@ DATABASE_URI="mongodb://codeminer42:mecontrata@ds029837.mlab.com:29837/heroku_5l
 API_URI="http://apilipse.herokuapp.com"
 
 # Debug mode
-DEBUG = True
+DEBUG = False
 
 # Port
 PORT = 5000
